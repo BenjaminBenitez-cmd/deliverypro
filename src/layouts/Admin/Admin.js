@@ -1,20 +1,3 @@
-/*!
-
-=========================================================
-* Black Dashboard React v1.2.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/black-dashboard-react
-* Copyright 2020 Creative Tim (https://www.creative-tim.com)
-* Licensed under MIT (https://github.com/creativetimofficial/black-dashboard-react/blob/master/LICENSE.md)
-
-* Coded by Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
 import React from "react";
 import { Route, Switch, Redirect, useLocation } from "react-router-dom";
 // javascript plugin used to create scrollbars on windows
@@ -30,6 +13,7 @@ import routes from "routes.js";
 
 import logo from "assets/img/react-logo.png";
 import { BackgroundColorContext } from "contexts/BackgroundColorContext";
+import { DeliveryContextProvider } from "contexts/DeliveryContext";
 
 var ps;
 
@@ -121,10 +105,12 @@ function Admin(props) {
                 toggleSidebar={toggleSidebar}
                 sidebarOpened={sidebarOpened}
               />
-              <Switch>
-                {getRoutes(routes)}
-                <Redirect from="*" to="/admin/dashboard" />
-              </Switch>
+              <DeliveryContextProvider>
+                <Switch>
+                  {getRoutes(routes)}
+                  <Redirect from="*" to="/admin/dashboard" />
+                </Switch>
+              </DeliveryContextProvider>
               {
                 // we don't want the Footer to be rendered on map page
                 location.pathname === "/admin/maps" ? null : <Footer fluid />
