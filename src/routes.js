@@ -3,7 +3,6 @@ import Dashboard from "views/Dashboard.js";
 import Deliveries from "views/Deliveries";
 import Drivers from "views/Drivers";
 import Map from "views/Map.js";
-import Typography from "views/Typography.js";
 
 var routes = [
   {

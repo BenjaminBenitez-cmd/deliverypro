@@ -1,6 +1,7 @@
+import React, { useContext, useEffect, useReducer, useState } from 'react';
+import FormCheckButtons from '../components/Fields/FormCheckButtons';
 import DeliveryFinder from 'apis/DeliveryFinder';
 import { DeliveryContext } from 'contexts/DeliveryContext';
-import React, { useContext, useEffect, useState } from 'react';
 import {  useHistory } from 'react-router';
 
 import {
@@ -12,11 +13,12 @@ import {
     Row,
     Col,
     Button,
-    FormGroup,
     Input,
-    Label,
     Collapse,
-    CardFooter
+    CardFooter,
+    Modal,
+    ModalBody,
+    ModalFooter
 } from "reactstrap";
 
 const provinces = [
@@ -61,6 +63,7 @@ const statuses = [
   }
 ]
 
+
 export default function Deliveries () {
     let history = useHistory();
 
@@ -75,6 +78,27 @@ export default function Deliveries () {
     const [filterBar, setFilterBar] = useState({ date: false, province: false, status: false });
     //state for the checkboxes
     const [checkBoxState, setCheckBoxState] = useState([]);
+    //modal toggle
+    const [modal, setModal] = useState(false);
+    const [modalDelivery, setModalDelivery] = useState({});
+
+    
+    const [items, dispatch] = useReducer((state, action) => {
+      switch(action.type) {
+        case 'Add': 
+          return;
+        case 'Remove':
+          return state.filter(item => item.id !== action.id);
+        default:
+          return state;
+      }
+    }, [ ...deliveries]);
+
+    const toggleModal = (id) => {
+      setModalDelivery(deliveries.filter((delivery) => delivery.id === id));
+      console.log(modalDelivery);
+      setModal(!modal);
+    }
 
     const handleFilterToggle = (name) => {
       setFilterBar({...filterBar, [name]: !filterBar[name]});
@@ -161,9 +185,6 @@ export default function Deliveries () {
     return (
         <>
         <div className="content">
-        <Row>
-         
-        </Row>
         <Row>
           <Col md="3">
             <Card>
@@ -269,7 +290,7 @@ export default function Deliveries () {
                   <tbody>
                       {
                          localDeliveries && localDeliveries.map((node) => (
-                              <tr key={node.id}>
+                              <tr key={node.id} onClick={() => dispatch({ type: 'Remove', id: node.id })}>
                                   <td>
                                     <FormCheckButtons type="checkbox" name="check" label="" value={node.id} />
                                   </td>
@@ -290,21 +311,42 @@ export default function Deliveries () {
           </Col>
         </Row>
       </div>
-
+        <Button color="primary" onClick={toggleModal}>
+            Launch demo modal
+        </Button>
+        <Modal isOpen={modal} toggle={toggleModal}>
+            <div className="modal-header">
+              <h5 className="modal-title" id="exampleModalLabel">
+                Modal title
+              </h5>
+              <button
+                type="button"
+                className="close"
+                data-dismiss="modal"
+                aria-hidden="true"
+                onClick={toggleModal}
+              >
+                <i className="tim-icons icon-simple-remove" />
+              </button>
+            </div>
+            <ModalBody>
+                  <Row>
+                    <Col sm={6}>
+                      <p className="text-black-50">{modalDelivery.first_name}</p>
+                    </Col>
+                  </Row>
+            </ModalBody>
+            <ModalFooter>
+                <Button color="secondary" onClick={toggleModal}>
+                    Close
+                </Button>
+                <Button color="primary">
+                    Save changes
+                </Button>
+            </ModalFooter>
+        </Modal>
         </>
     )
 }
 
-const FormCheckButtons = (props) => (
-  <div className={props.type ===  'radio' ? "form-check-radio" : ''}>
-    <FormGroup check>
-      <Label className="form-check-label">
-        <Input name={props.name} value={props.value} type={props.type} {...props}/>{' '}
-        {props.label}
-        <span className="form-check-sign">
-          <span className="check"></span>
-        </span>
-      </Label>
-    </FormGroup>
-  </div> 
-  )
+

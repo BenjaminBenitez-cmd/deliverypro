@@ -7,11 +7,6 @@ import * as Yup from "yup";
 import NotificationAlert from "react-notification-alert";
 //Delivery context
 import { DeliveryContext } from "contexts/DeliveryContext";
-import DeliveryFinder from "apis/DeliveryFinder";
-
-
-
-
 
 // reactstrap components
 import {
@@ -28,7 +23,6 @@ import {
 
 function CreateDelivery() {
   const notificationAlertRef = React.useRef(null);
-  const { addDelivery } = useContext(DeliveryContext);
   const history = useHistory();
 
   const notify = (place, message, type) => {     
@@ -264,12 +258,7 @@ function CreateDelivery() {
   );
 }
 
-// const Notification = () => (
-//   <UncontrolledAlert className="alert-with-icon" color="info">
-//     <span className="tim-icons icon-bell-55" data-notify="icon" />
-//     <span data-notify="message">
-//       This is a notification with close button and icon.
-//     </span>
-//   </UncontrolledAlert>
-// )
+
+
+
 export default CreateDelivery;
