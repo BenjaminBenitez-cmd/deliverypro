@@ -1,7 +1,7 @@
 import React from 'react';
 import { FormGroup, Input, Label } from 'reactstrap';
 
-const FormCheckButtons = (props) => (
+const FormCheckButton = (props) => (
     <div className={props.type ===  'radio' ? "form-check-radio" : ''}>
       <FormGroup check>
         <Label className="form-check-label">
@@ -15,4 +15,4 @@ const FormCheckButtons = (props) => (
     </div> 
 )
 
-export default FormCheckButtons;
+export default FormCheckButton;

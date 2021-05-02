@@ -8,16 +8,59 @@ import AdminNavbar from "components/Navbars/AdminNavbar.js";
 import Footer from "components/Footer/Footer.js";
 import Sidebar from "components/Sidebar/Sidebar.js";
 import FixedPlugin from "components/FixedPlugin/FixedPlugin.js";
+import NotificationAlert from "react-notification-alert";
 
 import routes from "routes.js";
 
 import logo from "assets/img/react-logo.png";
 import { BackgroundColorContext } from "contexts/BackgroundColorContext";
-import { DeliveryContextProvider } from "contexts/DeliveryContext";
+import { useSelector } from "react-redux";
 
 var ps;
 
 function Admin(props) {
+  const notificationAlertRef = React.useRef(null);
+  const { message } = useSelector(state => state.notification);
+
+  const notify = (place, message) => {
+    var color = Math.floor(Math.random() * 5 + 1);
+    var type;
+    switch (color) {
+      case 1:
+        type = "primary";
+        break;
+      case 2:
+        type = "success";
+        break;
+      case 3:
+        type = "danger";
+        break;
+      case 4:
+        type = "warning";
+        break;
+      case 5:
+        type = "info";
+        break;
+      default:
+        break;
+    }
+    var options = {};
+    options = {
+      place: place,
+      message: (
+        <div>
+          <div>
+            {message}
+          </div>
+        </div>
+      ),
+      type: type,
+      icon: "tim-icons icon-bell-55",
+      autoDismiss: 7,
+    };
+    notificationAlertRef.current.notificationAlert(options);
+  };
+
   const location = useLocation();
   const mainPanelRef = React.useRef(null);
   const [sidebarOpened, setsidebarOpened] = React.useState(
@@ -85,6 +128,13 @@ function Admin(props) {
     }
     return "Brand";
   };
+
+  React.useEffect(() => {
+    if(message){
+      notify('br', message);
+    } 
+  }, [message]);
+
   return (
     <BackgroundColorContext.Consumer>
       {({ color, changeColor }) => (
@@ -105,12 +155,14 @@ function Admin(props) {
                 toggleSidebar={toggleSidebar}
                 sidebarOpened={sidebarOpened}
               />
-              <DeliveryContextProvider>
                 <Switch>
                   {getRoutes(routes)}
                   <Redirect from="*" to="/admin/dashboard" />
                 </Switch>
-              </DeliveryContextProvider>
+                <div className="react-notification-alert-container">
+                  <NotificationAlert ref={notificationAlertRef} />
+                </div>
+
               {
                 // we don't want the Footer to be rendered on map page
                 location.pathname === "/admin/maps" ? null : <Footer fluid />

@@ -15,43 +15,24 @@ import {
     FormGroup,
     CardFooter,
 } from "reactstrap";
-import DriverFinder from 'apis/DriverFinder';
-import UserFinder from 'apis/UserFinder';
 import NotificationAlert from "react-notification-alert";
-
+import { DriverRequests} from "../apis";
 
 
 export default function Drivers () {
     const notificationAlertRef = React.useRef(null);
     const [drivers, setDrivers ] = useState(null);
-    const notify = (place, message, type) => {     
-        var options = {};
-        options = {
-          place: place,
-          message: (
-            <div>
-              <div>
-                {message}
-              </div>
-            </div>
-          ),
-          type: type || "info",
-          icon: "tim-icons icon-bell-55",
-          autoDismiss: 7,
-        };
-        notificationAlertRef.current.notificationAlert(options);
-      };
 
     useEffect(() => {
-        const fetchDrivers = async () => {
+        const getDrivers = async () => {
             try {
-                const response = await DriverFinder.get('/');
+                const response = await DriverRequests.fetchDrivers();
                 setDrivers(response.data.data.drivers);
             } catch(err) {
                 setDrivers('No drivers');
             }  
         }
-        fetchDrivers();
+        getDrivers();
     }, [])
     return (
         <>
@@ -64,17 +45,7 @@ export default function Drivers () {
             email: Yup.string().email('Invalid email address').required('Required'),
             })}
             onSubmit={async (values, { setSubmitting }) => {
-                try {
-                    const response = await UserFinder.post('/invites/', values);
-                    if(response.status === 201) {
-                        notify('br', response.data.message, 'info')
-                    } else {
-                        notify('br', response.data.message, 'danger')
-                    }
-                    setSubmitting(false);
-                } catch (err) {
-                    notify('br', JSON.stringify(err), 'danger')
-                }        
+                alert('yow');
             }}
         >
             <div className="content">

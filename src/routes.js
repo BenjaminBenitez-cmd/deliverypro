@@ -1,8 +1,10 @@
 import CreateDelivery from "views/CreateDelivery";
+import Customers from "views/Customers";
 import Dashboard from "views/Dashboard.js";
 import Deliveries from "views/Deliveries";
 import Drivers from "views/Drivers";
 import Map from "views/Map.js";
+import Schedule from "views/Schedule";
 
 var routes = [
   {
@@ -41,6 +43,20 @@ var routes = [
     name: 'Drivers',
     icon: "tim-icons icon-delivery-fast",
     component: Drivers,
+    layout: "/admin",
+  },
+  {
+    path: "/customer",
+    name: 'Customers',
+    icon: "tim-icons icon-delivery-fast",
+    component: Customers,
+    layout: "/admin",
+  },
+  {
+    path: "/schedule",
+    name: 'Schedule',
+    icon: "tim-icons icon-calendar-60",
+    component: Schedule,
     layout: "/admin",
   },
 ];

@@ -15,13 +15,13 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, { useContext } from "react";
+import React from "react";
 // nodejs library that concatenates classes
 import classNames from "classnames";
 // react plugin used to create charts
 import { Line, Bar } from "react-chartjs-2";
 //use context for deliveries
-import { DeliveryContext } from "contexts/DeliveryContext";
+import useGetDeliveries from "hooks/useGetDeliveries";
 
 
 // reactstrap components
@@ -54,7 +54,7 @@ import {
 } from "variables/charts.js";
 
 function Dashboard(props) {
-  const { deliveries } = useContext(DeliveryContext);
+  const { deliveries } = useGetDeliveries();
   const [bigChartData, setbigChartData] = React.useState("data1");
   const setBgChartData = (name) => {
     setbigChartData(name);
@@ -486,15 +486,15 @@ function Dashboard(props) {
                     {
                       deliveries.map((delivery) => {
                         return delivery.delivery_status === 'pending' && (
-                          <tr>
+                          <tr key={delivery.id}>
                             <td>{delivery.first_name} {delivery.last_name}</td>
                             <td>{delivery.phone_number}</td>
                             <td>{delivery.delivery_date.split('T')[0]}</td>
                             <td className="text-center">{delivery.district}</td>
-                        </tr>
+                          </tr>
                         )
                       })
-                  }
+                    }
                   </tbody>
                 </Table>
               </CardBody>
