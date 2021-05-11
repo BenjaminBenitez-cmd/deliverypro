@@ -23,6 +23,7 @@ import {
 } from "reactstrap";
 import { useDispatch } from "react-redux";
 import { logOutAction } from "features/auth/AuthSlice";
+import { Link } from "react-router-dom";
 
 function AdminNavbar(props) {
   const dispatch = useDispatch();
@@ -151,12 +152,9 @@ function AdminNavbar(props) {
                   <p className="d-lg-none">Log out</p>
                 </DropdownToggle>
                 <DropdownMenu className="dropdown-navbar" right tag="ul">
-                  <NavLink tag="li">
-                    <DropdownItem className="nav-item">Profile</DropdownItem>
-                  </NavLink>
-                  <NavLink tag="li">
-                    <DropdownItem className="nav-item">Settings</DropdownItem>
-                  </NavLink>
+                  <Link tag="li" to="/admin/account">
+                    <DropdownItem className="nav-item">Account</DropdownItem>
+                  </Link>
                   <DropdownItem divider tag="li" />
                   <NavLink tag="li">
                     <DropdownItem className="nav-item" onClick={handleClick}>Log out</DropdownItem>

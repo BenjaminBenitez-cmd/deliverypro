@@ -1,3 +1,4 @@
+import Account from "views/Account";
 import CreateDelivery from "views/CreateDelivery";
 import Customers from "views/Customers";
 import Dashboard from "views/Dashboard.js";
@@ -32,7 +33,7 @@ var routes = [
   },
   {
     path: "/createdelivery",
-    name: 'Create Delivery',
+    name: "Create Delivery",
     icon: "tim-icons icon-notes",
     component: CreateDelivery,
     layout: "/admin",
@@ -40,24 +41,32 @@ var routes = [
   },
   {
     path: "/drivers",
-    name: 'Drivers',
+    name: "Drivers",
     icon: "tim-icons icon-delivery-fast",
     component: Drivers,
     layout: "/admin",
   },
   {
     path: "/customer",
-    name: 'Customers',
+    name: "Customers",
     icon: "tim-icons icon-delivery-fast",
     component: Customers,
     layout: "/admin",
   },
   {
     path: "/schedule",
-    name: 'Schedule',
+    name: "Schedule",
     icon: "tim-icons icon-calendar-60",
     component: Schedule,
     layout: "/admin",
+  },
+  {
+    path: "/account",
+    name: "Account",
+    icon: "tim-icons icon-calendar-60",
+    component: Account,
+    layout: "/admin",
+    redirect: true,
   },
 ];
 export default routes;

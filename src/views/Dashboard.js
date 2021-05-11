@@ -15,7 +15,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React from "react";
+import React, { useEffect } from "react";
 // nodejs library that concatenates classes
 import classNames from "classnames";
 // react plugin used to create charts
@@ -52,13 +52,21 @@ import {
   chartExample3,
   chartExample4,
 } from "variables/charts.js";
+import { useDispatch } from "react-redux";
+import { getSchedules } from "features/schedules/ScheduleSlice";
 
 function Dashboard(props) {
+  const dispatch = useDispatch();
   const { deliveries } = useGetDeliveries();
   const [bigChartData, setbigChartData] = React.useState("data1");
   const setBgChartData = (name) => {
     setbigChartData(name);
   };
+
+  useEffect(() => {
+    dispatch(getSchedules);
+  })
+  
   return (
     <>
       <div className="content">
