@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getDeliveries } from "features/deliveries/DeliverySlice";
-import { filterDeliveries } from "features/deliveries/DeliverySlice";
+import { getDeliveries } from "redux/deliveries/DeliverySlice";
+import { filterDeliveries } from "redux/deliveries/DeliverySlice";
 
 const filter = ({ deliveries, filter: fl }) => {
   const isChecked = fl.checked;

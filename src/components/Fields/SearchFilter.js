@@ -9,7 +9,7 @@ import {
   Button,
   Row,
 } from "reactstrap";
-import DeliveryAddModal from "components/Modals/AddDeliveryModal";
+import DeliveryAddModal from "components/Modals/DeliveryAddModal";
 
 const SearchFilter = () => {
   const { filterItems } = useFilter();

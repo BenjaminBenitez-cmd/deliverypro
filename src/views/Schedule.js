@@ -1,7 +1,7 @@
 import DropdownCard from "components/Sidebar/DropdownCard";
-import { addTime } from "features/schedules/ScheduleSlice";
-import { deleteTime } from "features/schedules/ScheduleSlice";
-import { getSchedules } from "features/schedules/ScheduleSlice";
+import { addTime } from "redux/schedules/ScheduleSlice";
+import { deleteTime } from "redux/schedules/ScheduleSlice";
+import { getSchedules } from "redux/schedules/ScheduleSlice";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {

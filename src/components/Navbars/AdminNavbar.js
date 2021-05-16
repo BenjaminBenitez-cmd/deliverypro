@@ -22,7 +22,7 @@ import {
   ModalHeader,
 } from "reactstrap";
 import { useDispatch } from "react-redux";
-import { logOutAction } from "features/auth/AuthSlice";
+import { logOutAction } from "redux/auth/AuthSlice";
 import { Link } from "react-router-dom";
 
 function AdminNavbar(props) {
@@ -61,7 +61,7 @@ function AdminNavbar(props) {
 
   const handleClick = () => {
     dispatch(logOutAction());
-  }
+  };
 
   return (
     <>
@@ -157,7 +157,9 @@ function AdminNavbar(props) {
                   </Link>
                   <DropdownItem divider tag="li" />
                   <NavLink tag="li">
-                    <DropdownItem className="nav-item" onClick={handleClick}>Log out</DropdownItem>
+                    <DropdownItem className="nav-item" onClick={handleClick}>
+                      Log out
+                    </DropdownItem>
                   </NavLink>
                 </DropdownMenu>
               </UncontrolledDropdown>

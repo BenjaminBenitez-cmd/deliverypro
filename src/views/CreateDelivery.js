@@ -17,11 +17,12 @@ import {
   Col,
 } from "reactstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { addDelivery } from "features/deliveries/DeliverySlice";
+import { addDelivery } from "redux/deliveries/DeliverySlice";
 
 function CreateDelivery() {
   const days = useSelector((state) => state.schedule.days);
-  const phoneRegExp = /^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/;
+  const phoneRegExp =
+    /^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/;
 
   const dispatch = useDispatch();
   const history = useHistory();
@@ -29,7 +30,12 @@ function CreateDelivery() {
   //function to sort the unique days
   const getUniqueDays = (array) => {
     return array
-      .filter(((set) => (f) => !set.has(f.name) && set.add(f.name))(new Set()))
+      .filter(
+        (
+          (set) => (f) =>
+            !set.has(f.name) && set.add(f.name)
+        )(new Set())
+      )
       .map((days) => {
         return {
           name: days.name,

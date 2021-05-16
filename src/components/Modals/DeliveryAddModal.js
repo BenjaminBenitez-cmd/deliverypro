@@ -11,7 +11,7 @@ import {
   Button,
   ModalFooter,
 } from "reactstrap";
-import { addDelivery } from "features/deliveries/DeliverySlice";
+import { addDelivery } from "redux/deliveries/DeliverySlice";
 import { useDispatch, useSelector } from "react-redux";
 
 const DeliveryAddModal = ({ isOpen, toggleModal, information }) => {

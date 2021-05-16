@@ -23,7 +23,6 @@ import { Line, Bar } from "react-chartjs-2";
 //use context for deliveries
 import useGetDeliveries from "hooks/useGetDeliveries";
 
-
 // reactstrap components
 import {
   Button,
@@ -53,7 +52,7 @@ import {
   chartExample4,
 } from "variables/charts.js";
 import { useDispatch } from "react-redux";
-import { getSchedules } from "features/schedules/ScheduleSlice";
+import { getSchedules } from "redux/schedules/ScheduleSlice";
 
 function Dashboard(props) {
   const dispatch = useDispatch();
@@ -65,8 +64,8 @@ function Dashboard(props) {
 
   useEffect(() => {
     dispatch(getSchedules);
-  })
-  
+  });
+
   return (
     <>
       <div className="content">
@@ -491,18 +490,20 @@ function Dashboard(props) {
                     </tr>
                   </thead>
                   <tbody>
-                    {
-                      deliveries.map((delivery) => {
-                        return delivery.delivery_status === 'pending' && (
+                    {deliveries.map((delivery) => {
+                      return (
+                        delivery.delivery_status === "pending" && (
                           <tr key={delivery.id}>
-                            <td>{delivery.first_name} {delivery.last_name}</td>
+                            <td>
+                              {delivery.first_name} {delivery.last_name}
+                            </td>
                             <td>{delivery.phone_number}</td>
-                            <td>{delivery.delivery_date.split('T')[0]}</td>
+                            <td>{delivery.delivery_date.split("T")[0]}</td>
                             <td className="text-center">{delivery.district}</td>
                           </tr>
                         )
-                      })
-                    }
+                      );
+                    })}
                   </tbody>
                 </Table>
               </CardBody>

@@ -1,4 +1,4 @@
-import { logOutAction } from "features/auth/AuthSlice";
+import { logOutAction } from "redux/auth/AuthSlice";
 import jwtDecode from "jwt-decode";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
