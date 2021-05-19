@@ -1,105 +1,102 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { DeliveryRequests } from '../../apis';
-import { setMessage } from '../notifications/NotificationsSlice';
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { DeliveryRequests } from "../../apis";
+import { setMessage } from "../notifications/NotificationsSlice";
 
-export const getDeliveries = createAsyncThunk('deliveries/getdeliveries', 
-async (_, { rejectWithValue, dispatch }) => {
+export const getDeliveries = createAsyncThunk(
+  "deliveries/getdeliveries",
+  async (_, { rejectWithValue }) => {
     try {
       const results = await DeliveryRequests.fetchDeliveriesRequest();
-      dispatch(setMessage('Got deliveries'));
       return results.data.data.deliveries;
-    } catch(err) {
+    } catch (err) {
       return rejectWithValue([], err);
     }
-})
+  }
+);
 
-export const addDelivery = createAsyncThunk('deliveries/addDelivery', 
-async (id, { rejectWithValue, dispatch }) => {
+export const addDelivery = createAsyncThunk(
+  "deliveries/addDelivery",
+  async (id, { rejectWithValue, dispatch }) => {
     try {
       const results = await DeliveryRequests.postDeliveryRequest(id);
-      dispatch(setMessage('Success, added delivery'));
+      dispatch(setMessage("Success, added delivery"));
       return results.data.data.delivery;
-    } catch(err) {
-      dispatch(setMessage('Error, unable to add delivery'));
+    } catch (err) {
+      dispatch(setMessage("Error, unable to add delivery"));
       return rejectWithValue([], err);
     }
-})
+  }
+);
 
-export const toggleDelivery = createAsyncThunk('deliveries/toggleDelivery', 
-async (index, { rejectWithValue, dispatch }) => {
+export const toggleDelivery = createAsyncThunk(
+  "deliveries/toggleDelivery",
+  async (index, { rejectWithValue, dispatch }) => {
     try {
-      const response =  await DeliveryRequests.toggleDeliveryRequest(index);
+      const response = await DeliveryRequests.toggleDeliveryRequest(index);
       dispatch(setMessage(response.data.message));
       return response.data.data.delivery;
-
-    } catch(err) {
-      dispatch(setMessage('Error with your request'));
+    } catch (err) {
+      dispatch(setMessage("Unable to change delivery status"));
       return rejectWithValue([], err);
     }
-})
-
+  }
+);
 
 export const deliverySlice = createSlice({
-  name: 'deliveries',
+  name: "deliveries",
   initialState: {
-    status: '',
+    status: "",
     deliveries: [],
     filter: {
-        value: 'false',
-        column: 'delivery_status',
-    }
+      value: "false",
+      column: "delivery_status",
+    },
   },
   reducers: {
     filterDeliveries: (state, action) => {
-      state.filter = action.payload
+      state.filter = action.payload;
     },
-    updateDelivery:(state, action) => {
+    updateDelivery: (state, action) => {
       state.deliveries[action.payload] = true;
-    }
+    },
   },
   extraReducers: {
     [getDeliveries.pending]: (state) => {
-      state.status = 'loading'
+      state.status = "loading";
     },
     [getDeliveries.fulfilled]: (state, action) => {
-      state.deliveries = action.payload
-      state.status = 'success'
+      state.deliveries = action.payload;
+      state.status = "success";
     },
     [getDeliveries.rejected]: (state) => {
-      state.status = 'failed'
+      state.status = "failed";
     },
     [addDelivery.pending]: (state) => {
-      state.status = 'loading'
+      state.status = "loading";
     },
     [addDelivery.fulfilled]: (state, action) => {
-      state.deliveries.push(action.payload)
-      state.status = 'success'
+      state.deliveries.push(action.payload);
+      state.status = "success";
     },
     [addDelivery.rejected]: (state) => {
-      state.status = 'failed'
-    },
-    [toggleDelivery.pending]: (state) => {
-      state.status = 'loading'
+      state.status = "failed";
     },
     [toggleDelivery.fulfilled]: (state, action) => {
       const { id, delivery_status } = action.payload;
-      const index = state.deliveries.findIndex(delivery => delivery.id === id);
-      if(index === null) {
+      const index = state.deliveries.findIndex(
+        (delivery) => delivery.id === id
+      );
+      if (index === null) {
         return state;
       }
       state.deliveries[index].delivery_status = delivery_status;
-      state.status = 'success';
-    },
-    [toggleDelivery.rejected]: (state) => {
-      state.status = 'failed'
+      state.status = "success";
     },
   },
-})
+});
 
 const { actions, reducer } = deliverySlice;
 
 export const { filterDeliveries, updateDelivery } = actions;
 
-
 export default reducer;
-

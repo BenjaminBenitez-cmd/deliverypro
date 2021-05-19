@@ -51,19 +51,20 @@ import {
   chartExample3,
   chartExample4,
 } from "variables/charts.js";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getSchedules } from "redux/schedules/ScheduleSlice";
 
 function Dashboard(props) {
   const dispatch = useDispatch();
-  const { deliveries } = useGetDeliveries();
+  const deliveries = useSelector((state) => state.deliveries.deliveries);
+
   const [bigChartData, setbigChartData] = React.useState("data1");
   const setBgChartData = (name) => {
     setbigChartData(name);
   };
 
   useEffect(() => {
-    dispatch(getSchedules);
+    dispatch(getSchedules());
   });
 
   return (
@@ -75,7 +76,7 @@ function Dashboard(props) {
               <CardHeader>
                 <Row>
                   <Col className="text-left" sm="6">
-                    <h5 className="card-category">Total Shipments</h5>
+                    <h5 className="card-category">Total Deliveries</h5>
                     <CardTitle tag="h2">Performance</CardTitle>
                   </Col>
                   <Col sm="6">
@@ -94,7 +95,7 @@ function Dashboard(props) {
                         onClick={() => setBgChartData("data1")}
                       >
                         <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block">
-                          Accounts
+                          Total
                         </span>
                         <span className="d-block d-sm-none">
                           <i className="tim-icons icon-single-02" />
@@ -111,7 +112,7 @@ function Dashboard(props) {
                         onClick={() => setBgChartData("data2")}
                       >
                         <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block">
-                          Purchases
+                          Fullfilled
                         </span>
                         <span className="d-block d-sm-none">
                           <i className="tim-icons icon-gift-2" />
@@ -128,7 +129,7 @@ function Dashboard(props) {
                         onClick={() => setBgChartData("data3")}
                       >
                         <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block">
-                          Sessions
+                          Canceled
                         </span>
                         <span className="d-block d-sm-none">
                           <i className="tim-icons icon-tap-02" />
@@ -149,11 +150,11 @@ function Dashboard(props) {
             </Card>
           </Col>
         </Row>
-        <Row>
+        {/* <Row>
           <Col lg="4">
             <Card className="card-chart">
               <CardHeader>
-                <h5 className="card-category">Total Shipments</h5>
+                <h5 className="card-category">Total Deliveries</h5>
                 <CardTitle tag="h3">
                   <i className="tim-icons icon-bell-55 text-info" /> 763,215
                 </CardTitle>
@@ -171,10 +172,10 @@ function Dashboard(props) {
           <Col lg="4">
             <Card className="card-chart">
               <CardHeader>
-                <h5 className="card-category">Daily Sales</h5>
+                <h5 className="card-category">Disctrict Deliveries</h5>
                 <CardTitle tag="h3">
                   <i className="tim-icons icon-delivery-fast text-primary" />{" "}
-                  3,500€
+                  500
                 </CardTitle>
               </CardHeader>
               <CardBody>
@@ -190,7 +191,7 @@ function Dashboard(props) {
           <Col lg="4">
             <Card className="card-chart">
               <CardHeader>
-                <h5 className="card-category">Completed Tasks</h5>
+                <h5 className="card-category">Fullfilled Deliveries</h5>
                 <CardTitle tag="h3">
                   <i className="tim-icons icon-send text-success" /> 12,100K
                 </CardTitle>
@@ -205,7 +206,7 @@ function Dashboard(props) {
               </CardBody>
             </Card>
           </Col>
-        </Row>
+        </Row> */}
         <Row>
           <Col lg="6" md="12">
             <Card className="card-tasks">
@@ -260,10 +261,8 @@ function Dashboard(props) {
                           </FormGroup>
                         </td>
                         <td>
-                          <p className="title">Update the Documentation</p>
-                          <p className="text-muted">
-                            Dwuamish Head, Seattle, WA 8:47 AM
-                          </p>
+                          <p className="title">Deliver to Orange Walk Town</p>
+                          <p className="text-muted">8:45 AM</p>
                         </td>
                         <td className="td-actions text-right">
                           <Button
@@ -299,13 +298,8 @@ function Dashboard(props) {
                           </FormGroup>
                         </td>
                         <td>
-                          <p className="title">GDPR Compliance</p>
-                          <p className="text-muted">
-                            The GDPR is a regulation that requires businesses to
-                            protect the personal data and privacy of Europe
-                            citizens for transactions that occur within EU
-                            member states.
-                          </p>
+                          <p className="title">Deliver to Belize City</p>
+                          <p className="text-muted">5:45 AM</p>
                         </td>
                         <td className="td-actions text-right">
                           <Button
@@ -337,41 +331,15 @@ function Dashboard(props) {
                           </FormGroup>
                         </td>
                         <td>
-                          <p className="title">Solve the issues</p>
+                          <p className="title">
+                            Manually Edit the pending deliveries
+                          </p>
                           <p className="text-muted">
-                            Fifty percent of all respondents said they would be
-                            more likely to shop at a company
+                            Mr.Smith has picked up his delivery so we have to
+                            set it as fulfilled.
                           </p>
                         </td>
-                        <td className="td-actions text-right">
-                          <Button
-                            color="link"
-                            id="tooltip362404923"
-                            title=""
-                            type="button"
-                          >
-                            <i className="tim-icons icon-pencil" />
-                          </Button>
-                          <UncontrolledTooltip
-                            delay={0}
-                            target="tooltip362404923"
-                            placement="right"
-                          >
-                            Edit Task
-                          </UncontrolledTooltip>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <FormGroup check>
-                            <Label check>
-                              <Input defaultValue="" type="checkbox" />
-                              <span className="form-check-sign">
-                                <span className="check" />
-                              </span>
-                            </Label>
-                          </FormGroup>
-                        </td>
+
                         <td>
                           <p className="title">Release v2.0.0</p>
                           <p className="text-muted">
@@ -390,78 +358,6 @@ function Dashboard(props) {
                           <UncontrolledTooltip
                             delay={0}
                             target="tooltip818217463"
-                            placement="right"
-                          >
-                            Edit Task
-                          </UncontrolledTooltip>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <FormGroup check>
-                            <Label check>
-                              <Input defaultValue="" type="checkbox" />
-                              <span className="form-check-sign">
-                                <span className="check" />
-                              </span>
-                            </Label>
-                          </FormGroup>
-                        </td>
-                        <td>
-                          <p className="title">Export the processed files</p>
-                          <p className="text-muted">
-                            The report also shows that consumers will not easily
-                            forgive a company once a breach exposing their
-                            personal data occurs.
-                          </p>
-                        </td>
-                        <td className="td-actions text-right">
-                          <Button
-                            color="link"
-                            id="tooltip831835125"
-                            title=""
-                            type="button"
-                          >
-                            <i className="tim-icons icon-pencil" />
-                          </Button>
-                          <UncontrolledTooltip
-                            delay={0}
-                            target="tooltip831835125"
-                            placement="right"
-                          >
-                            Edit Task
-                          </UncontrolledTooltip>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <FormGroup check>
-                            <Label check>
-                              <Input defaultValue="" type="checkbox" />
-                              <span className="form-check-sign">
-                                <span className="check" />
-                              </span>
-                            </Label>
-                          </FormGroup>
-                        </td>
-                        <td>
-                          <p className="title">Arival at export process</p>
-                          <p className="text-muted">
-                            Capitol Hill, Seattle, WA 12:34 AM
-                          </p>
-                        </td>
-                        <td className="td-actions text-right">
-                          <Button
-                            color="link"
-                            id="tooltip217595172"
-                            title=""
-                            type="button"
-                          >
-                            <i className="tim-icons icon-pencil" />
-                          </Button>
-                          <UncontrolledTooltip
-                            delay={0}
-                            target="tooltip217595172"
                             placement="right"
                           >
                             Edit Task
@@ -492,13 +388,13 @@ function Dashboard(props) {
                   <tbody>
                     {deliveries.map((delivery) => {
                       return (
-                        delivery.delivery_status === "pending" && (
+                        delivery.delivery_status && (
                           <tr key={delivery.id}>
                             <td>
                               {delivery.first_name} {delivery.last_name}
                             </td>
                             <td>{delivery.phone_number}</td>
-                            <td>{delivery.delivery_date.split("T")[0]}</td>
+                            <td>{delivery.delivery_day}</td>
                             <td className="text-center">{delivery.district}</td>
                           </tr>
                         )

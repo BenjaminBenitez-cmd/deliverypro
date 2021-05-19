@@ -7,7 +7,6 @@ import DeliveryTable from "components/Tables.js/DeliveryTable";
 import FilterSideBar from "components/Sidebar/FilterSideBar";
 import { useDispatch, useSelector } from "react-redux";
 import { getDeliveries } from "redux/deliveries/DeliverySlice";
-import Loading from "components/loading/Loading";
 
 export default function Deliveries() {
   const dispatch = useDispatch();
@@ -16,7 +15,6 @@ export default function Deliveries() {
   useEffect(() => {
     dispatch(getDeliveries());
   }, []);
-
   return (
     <>
       <div className="content">
@@ -27,16 +25,9 @@ export default function Deliveries() {
                 <SearchFilter />
               </Col>
             </Row>
-            <Row>
-              <Col>
-                <FilterSideBar />
-              </Col>
-            </Row>
           </Col>
           <Col md="9">
-            <Loading status={status}>
-              <DeliveryTable deliveries={deliveries} />
-            </Loading>
+            <DeliveryTable deliveries={deliveries} status={status} />
           </Col>
         </Row>
       </div>

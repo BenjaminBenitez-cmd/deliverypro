@@ -49,9 +49,9 @@ function Footer() {
             href="https://www.creative-tim.com/?ref=bdr-user-archive-footer"
             target="_blank"
           >
-            Creative Tim
+            bbenitez.tech
           </a>{" "}
-          for a better web.
+          for better deliveries
         </div>
       </Container>
     </footer>

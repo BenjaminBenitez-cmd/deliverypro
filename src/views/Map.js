@@ -31,6 +31,8 @@ import {
   Col,
   CardTitle,
   Table,
+  CardFooter,
+  Button,
 } from "reactstrap";
 import axios from "axios";
 
@@ -323,7 +325,7 @@ function Map() {
                           Longitude: {lng} | Latitude: {lat} | Zoom: {zoom}
                         </div>
                       </div>
-                      <div ref={mapContainer} className="mapContainer" />
+                      <div ref={mapContainer} className="mapContainer tall" />
                     </Card>
                   </Col>
                 </Row>
@@ -363,6 +365,9 @@ const MapDeliveryList = ({ deliveries }) => {
           </Table>
         </div>
       </CardBody>
+      <CardFooter>
+        <Button color="primary">Generate</Button>
+      </CardFooter>
     </Card>
   );
 };

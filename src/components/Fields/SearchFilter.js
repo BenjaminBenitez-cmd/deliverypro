@@ -27,7 +27,7 @@ const SearchFilter = () => {
 
   return (
     <>
-      <Card>
+      <Card className="card-plain">
         <CardHeader>
           <Row className="justify-content-between px-3">
             <Button

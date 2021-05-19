@@ -100,7 +100,7 @@ let chartExample1 = {
       ],
       datasets: [
         {
-          label: "My First dataset",
+          label: "Deliveries",
           fill: true,
           backgroundColor: gradientStroke,
           borderColor: "#1f8ef1",
@@ -193,13 +193,13 @@ let chartExample1 = {
           label: "My First dataset",
           fill: true,
           backgroundColor: gradientStroke,
-          borderColor: "#1f8ef1",
+          borderColor: "red",
           borderWidth: 2,
           borderDash: [],
           borderDashOffset: 0.0,
-          pointBackgroundColor: "#1f8ef1",
+          pointBackgroundColor: "red",
           pointBorderColor: "rgba(255,255,255,0)",
-          pointHoverBackgroundColor: "#1f8ef1",
+          pointHoverBackgroundColor: "red",
           pointBorderWidth: 20,
           pointHoverRadius: 4,
           pointHoverBorderWidth: 15,
@@ -265,10 +265,10 @@ let chartExample3 = {
     gradientStroke.addColorStop(0, "rgba(119,52,169,0)"); //purple colors
 
     return {
-      labels: ["USA", "GER", "AUS", "UK", "RO", "BR"],
+      labels: ["OWT", "BLZ", "CZL", "BLMP", "DNG", "SNC", "SP"],
       datasets: [
         {
-          label: "Countries",
+          label: "Districts",
           fill: true,
           backgroundColor: gradientStroke,
           hoverBackgroundColor: gradientStroke,
@@ -276,7 +276,7 @@ let chartExample3 = {
           borderWidth: 2,
           borderDash: [],
           borderDashOffset: 0.0,
-          data: [53, 20, 10, 80, 100, 45],
+          data: [10, 20, 10, 80, 100, 45, 20],
         },
       ],
     };

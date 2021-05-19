@@ -5,14 +5,17 @@ import {
   CardHeader,
   CardTitle,
   Table,
-  CustomInput,
+  FormGroup,
+  Input,
+  Label,
 } from "reactstrap";
 import { statustoText } from "../../utilities/utilities";
 import { useDispatch } from "react-redux";
 import { toggleDelivery } from "redux/deliveries/DeliverySlice";
-import DeliveryModal from "components/Modals/DeliveryDetailsModal";
+import DeliveryDetailsModal from "components/Modals/DeliveryDetailsModal";
+import LoadingSpinner from "components/loading/LoadingSpinner";
 
-const DeliveryTable = ({ deliveries }) => {
+const DeliveryTable = ({ deliveries, status }) => {
   const dispatch = useDispatch();
   const [isOpen, setIsOpen] = useState(false);
   const [delivery, setDelivery] = useState({});
@@ -25,14 +28,20 @@ const DeliveryTable = ({ deliveries }) => {
     setIsOpen(!isOpen);
   };
 
+  if (status === "loading") {
+    return <LoadingSpinner />;
+  } else if (status === "failed") {
+    return <div>An Error occurred, report to developer</div>;
+  }
+
   return (
     <>
-      <Card>
+      <Card className="card-plain">
         <CardHeader>
           <CardTitle tag="h4">Deliveries</CardTitle>
         </CardHeader>
         <CardBody>
-          <Table className="tablesorter" responsive>
+          <Table className="tablesorter" responsive striped>
             <thead className="text-primary">
               <tr>
                 <th>Fullfilled</th>
@@ -46,21 +55,26 @@ const DeliveryTable = ({ deliveries }) => {
             </thead>
             <tbody>
               {deliveries &&
-                deliveries.map((node, index) => (
+                deliveries.map((node) => (
                   <tr key={node.id} onClick={() => handleToggleOpen(node.id)}>
                     <td>
-                      <CustomInput
-                        type="switch"
-                        id={`switch-${node.id}`}
-                        onClick={() => dispatch(toggleDelivery(node.id))}
-                      />
+                      <FormGroup check>
+                        <Label check>
+                          <Input
+                            onChange={() => dispatch(toggleDelivery(node.id))}
+                            checked={node.delivery_status}
+                            type="checkbox"
+                          />
+                          <span className="form-check-sign" />
+                        </Label>
+                      </FormGroup>
                     </td>
                     <td>{statustoText(node.delivery_status)}</td>
                     <td>
                       {node.first_name} {node.last_name}
                     </td>
                     <td>
-                      {node.delivery_day} {node.time_start} : {node.time_start}
+                      {node.delivery_day} {node.time_start} : {node.time_end}
                     </td>
                     <td>{node.phone_number}</td>
                     <td>{node.street}</td>
@@ -72,7 +86,7 @@ const DeliveryTable = ({ deliveries }) => {
         </CardBody>
       </Card>
       {isOpen && (
-        <DeliveryModal
+        <DeliveryDetailsModal
           isOpen={isOpen}
           toggleModal={handleToggleOpen}
           information={delivery}

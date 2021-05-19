@@ -9,6 +9,7 @@ import {
   Button,
   Card,
   CardBody,
+  CardFooter,
   CardHeader,
   CardTitle,
   Col,
@@ -47,30 +48,32 @@ const Signin = () => {
   return (
     <Formik {...{ initialValues, validationSchema, onSubmit }}>
       <div className="wrapper">
-        <Row>
-          <Col sm={6}>
-            <Card className="card-user mx-4">
+        <Row className="justify-content-center align-items-center vh-100">
+          <Form>
+            <Card className="card-login card-white mx-4">
               <CardHeader>
-                <CardTitle tag="h5">Sign Up</CardTitle>
+                <CardTitle tag="h1">Sign in</CardTitle>
               </CardHeader>
               <CardBody>
-                <Form>
-                  <FormGroup>
-                    <MyTextInput label="Email" type="email" name="email" />
-                  </FormGroup>
-                  <FormGroup>
-                    <MyTextInput
-                      label="password"
-                      type="password"
-                      name="password"
-                    />
-                  </FormGroup>
-                  <Button type="submit">Login</Button>
-                  {serverError && <div>{serverError}</div>}
-                </Form>
+                <FormGroup>
+                  <MyTextInput label="Email" type="email" name="email" />
+                </FormGroup>
+                <FormGroup>
+                  <MyTextInput
+                    label="password"
+                    type="password"
+                    name="password"
+                  />
+                </FormGroup>
+                {serverError && <div>{serverError}</div>}
               </CardBody>
+              <CardFooter>
+                <Button type="submit" color="primary" className="btn-block">
+                  Login
+                </Button>
+              </CardFooter>
             </Card>
-          </Col>
+          </Form>
         </Row>
       </div>
     </Formik>

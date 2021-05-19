@@ -10,6 +10,7 @@ import {
   Row,
   Button,
   ModalFooter,
+  ModalHeader,
 } from "reactstrap";
 import { addDelivery } from "redux/deliveries/DeliverySlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -17,6 +18,7 @@ import { useDispatch, useSelector } from "react-redux";
 const DeliveryAddModal = ({ isOpen, toggleModal, information }) => {
   const days = useSelector((state) => state.schedule.days);
   const dispatch = useDispatch();
+
   const phoneRegExp =
     /^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/;
 
@@ -52,6 +54,7 @@ const DeliveryAddModal = ({ isOpen, toggleModal, information }) => {
   const onSubmit = async (values, { setSubmitting }) => {
     dispatch(addDelivery(values));
     setSubmitting(false);
+    toggleModal();
   };
 
   //function to sort the unique days
@@ -82,8 +85,9 @@ const DeliveryAddModal = ({ isOpen, toggleModal, information }) => {
           toggle={toggleModal}
           modalClassName="modal-black"
           size="lg"
+          style={{ marginTop: "-105px" }}
         >
-          <div className="modal-header">
+          <div className="modal-header mb-3">
             <h2 className="modal-title" id="exampleModalLabel">
               {information.first_name} {information.last_name}
             </h2>
@@ -97,128 +101,124 @@ const DeliveryAddModal = ({ isOpen, toggleModal, information }) => {
               <i className="tim-icons icon-simple-remove" />
             </button>
           </div>
-          <ModalBody>
-            <Row>
-              <Form>
-                <ModalBody>
-                  <Row>
-                    <Col className="pr-md-1" md="6">
-                      <FormGroup>
-                        <MyTextInput
-                          label="First Name"
-                          name="first_name"
-                          type="text"
-                        />
-                      </FormGroup>
-                    </Col>
-                    <Col className="px-md-1" md="6">
-                      <FormGroup>
-                        <MyTextInput
-                          label="Last Name"
-                          name="last_name"
-                          type="text"
-                        />
-                      </FormGroup>
-                    </Col>
-                    <Col className="pr-md-1" md="6">
-                      <FormGroup>
-                        <MyTextInput label="Email" name="email" type="email" />
-                      </FormGroup>
-                    </Col>
-                    <Col className="px-md-1" md="6">
-                      <FormGroup>
-                        <MyTextInput
-                          label="Phone Number"
-                          placeholder="xxx xxx xxxx"
-                          name="phone_number"
-                          type="tel"
-                        />
-                      </FormGroup>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col md="12">
-                      <FormGroup>
-                        <MyTextInput
-                          label="street"
-                          name="street"
-                          placeholder="Street Address"
-                          type="text"
-                        />
-                      </FormGroup>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col className="pr-md-1" md="6">
-                      <FormGroup>
-                        <MySelect label="District" name="district">
-                          <option value="">Select a District</option>
-                          <option value="Belize City">Belize City</option>
-                          <option value="San Ignacio">San Ignacio</option>
-                          <option value="Corozal">Corozal</option>
-                          <option value="Orange Walk">Orange Walk</option>
-                          <option value="Toledo">Toledo</option>
-                          <option value="San Pedro">San Pedro</option>
-                        </MySelect>
-                      </FormGroup>
-                    </Col>
-                    <Col md="6">
-                      <FormGroup>
-                        <MyTextInput
-                          label="Special Remarks"
-                          name="description"
-                          cols="80"
-                          placeholder="Any special remarks"
-                          rows="4"
-                          type="textarea"
-                        />
-                      </FormGroup>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col className="pr-md-1" md="6">
-                      <FormGroup>
-                        <MySelect label="Delivery Day" name="delivery_day">
-                          <option value="">Select a Day</option>
-                          {days &&
-                            getUniqueDays(days).map((day) => (
+          <Form>
+            <ModalBody>
+              <Row>
+                <Col className="pr-md-1" md="6">
+                  <FormGroup>
+                    <MyTextInput
+                      label="First Name"
+                      name="first_name"
+                      type="text"
+                    />
+                  </FormGroup>
+                </Col>
+                <Col className="px-md-1" md="6">
+                  <FormGroup>
+                    <MyTextInput
+                      label="Last Name"
+                      name="last_name"
+                      type="text"
+                    />
+                  </FormGroup>
+                </Col>
+                <Col className="pr-md-1" md="6">
+                  <FormGroup>
+                    <MyTextInput label="Email" name="email" type="email" />
+                  </FormGroup>
+                </Col>
+                <Col className="px-md-1" md="6">
+                  <FormGroup>
+                    <MyTextInput
+                      label="Phone Number"
+                      placeholder="xxx xxx xxxx"
+                      name="phone_number"
+                      type="tel"
+                    />
+                  </FormGroup>
+                </Col>
+              </Row>
+              <Row>
+                <Col md="12">
+                  <FormGroup>
+                    <MyTextInput
+                      label="street"
+                      name="street"
+                      placeholder="Street Address"
+                      type="text"
+                    />
+                  </FormGroup>
+                </Col>
+              </Row>
+              <Row>
+                <Col className="pr-md-1" md="6">
+                  <FormGroup>
+                    <MySelect label="District" name="district">
+                      <option value="">Select a District</option>
+                      <option value="Belize City">Belize City</option>
+                      <option value="San Ignacio">San Ignacio</option>
+                      <option value="Corozal">Corozal</option>
+                      <option value="Orange Walk">Orange Walk</option>
+                      <option value="Toledo">Toledo</option>
+                      <option value="San Pedro">San Pedro</option>
+                    </MySelect>
+                  </FormGroup>
+                </Col>
+                <Col md="6">
+                  <FormGroup>
+                    <MyTextInput
+                      label="Special Remarks"
+                      name="description"
+                      cols="80"
+                      placeholder="Any special remarks"
+                      rows="4"
+                      type="textarea"
+                    />
+                  </FormGroup>
+                </Col>
+              </Row>
+              <Row>
+                <Col className="pr-md-1" md="6">
+                  <FormGroup>
+                    <MySelect label="Delivery Day" name="delivery_day">
+                      <option value="">Select a Day</option>
+                      {days &&
+                        getUniqueDays(days).map((day) => (
+                          <option key={day.id} value={day.id}>
+                            {day.name}
+                          </option>
+                        ))}
+                    </MySelect>
+                  </FormGroup>
+                </Col>
+                <Col className="px-md-1" md="6">
+                  <FormGroup>
+                    <MySelect label="Delivery Time" name="delivery_time">
+                      <option value="">Select a Time Period</option>
+                      {days &&
+                        days.map((day) => {
+                          return (
+                            day.name_of_day_id === values.delivery_day && (
                               <option key={day.id} value={day.id}>
-                                {day.name}
+                                {day.time_start + " to " + day.time_end}
                               </option>
-                            ))}
-                        </MySelect>
-                      </FormGroup>
-                    </Col>
-                    <Col className="px-md-1" md="6">
-                      <FormGroup>
-                        <MySelect label="Delivery Time" name="delivery_time">
-                          <option value="">Select a Time Period</option>
-                          {days &&
-                            days.map((day) => {
-                              return (
-                                day.name_of_day_id === values.delivery_day && (
-                                  <option key={day.id} value={day.id}>
-                                    {day.time_start + " to " + day.time_end}
-                                  </option>
-                                )
-                              );
-                            })}
-                        </MySelect>
-                      </FormGroup>
-                    </Col>
-                  </Row>
-                </ModalBody>
-                <ModalFooter className="p-3">
-                  <Button className="btn-fill" color="primary" type="submit">
-                    Save
-                  </Button>
-                  <Button color="secondary" onClick={toggleModal}>
-                    Close
-                  </Button>
-                </ModalFooter>
-              </Form>
-            </Row>
-          </ModalBody>
+                            )
+                          );
+                        })}
+                    </MySelect>
+                  </FormGroup>
+                </Col>
+              </Row>
+            </ModalBody>
+            <ModalFooter className="p-3">
+              <Button color="secondary" onClick={toggleModal}>
+                Close
+              </Button>
+              <Button className="btn-fill" color="primary" type="submit">
+                Save
+              </Button>
+            </ModalFooter>
+          </Form>
         </Modal>
       )}
     />

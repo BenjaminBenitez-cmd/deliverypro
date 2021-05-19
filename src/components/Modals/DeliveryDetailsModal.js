@@ -1,17 +1,32 @@
-import { useState } from "react";
+import { ScheduleRequests } from "apis";
+import Map from "components/Maps/Map";
+import { useEffect, useState } from "react";
 import { Button, Col, Modal, ModalBody, ModalFooter, Row } from "reactstrap";
 import DeliveryEditModal from "./DeliveryEditModal";
 
-const DeliveryModal = ({ isOpen, toggleModal, information }) => {
+const DeliveryDetailsModal = ({ isOpen, toggleModal, information }) => {
   const [isEditModalOpen, setEditModalOpen] = useState(false);
+  // const [deliveryTime, setDeliveryTime] = useState(null);
 
   const handleToggle = () => {
     setEditModalOpen(!isEditModalOpen);
   };
 
+  // useEffect(() => {
+  //   const fetchTime = async () => {
+  //     try {
+  //       const response = await ScheduleRequests.fetchTime(information.id);
+  //       setDeliveryTime(response.data.data.time);
+  //     } catch (e) {
+  //       console.log(e);
+  //     }
+  //   };
+  //   fetchTime();
+  // }, [information.id]);
+
   return (
     <>
-      <Modal isOpen={isOpen} toggle={toggleModal}>
+      <Modal isOpen={isOpen} toggle={toggleModal} size="lg">
         <div className="modal-header">
           <h2 className="modal-title" id="exampleModalLabel">
             {information.first_name} {information.last_name}
@@ -30,7 +45,7 @@ const DeliveryModal = ({ isOpen, toggleModal, information }) => {
           <Row>
             <Col sm={6}>
               <div className="py-2">
-                <strong>Buyer</strong>{" "}
+                <strong>Buyer </strong>
                 {information.first_name + " " + information.last_name}
               </div>
               <div className="py-2">
@@ -40,12 +55,16 @@ const DeliveryModal = ({ isOpen, toggleModal, information }) => {
                 <strong>Phone Number</strong> {information.phone_number}
               </div>
               <div className="py-2">
-                <strong>Delivery On</strong> {information.delivery_date}
+                <strong>Delivery Time period</strong>{" "}
+                {information.time_start + " to " + information.time_end}
               </div>
               <div className="py-2">
                 <strong>Location</strong>{" "}
                 {information.street + ", " + information.district}
               </div>
+            </Col>
+            <Col sm={6}>
+              <Map />
             </Col>
           </Row>
         </ModalBody>
@@ -69,4 +88,4 @@ const DeliveryModal = ({ isOpen, toggleModal, information }) => {
   );
 };
 
-export default DeliveryModal;
+export default DeliveryDetailsModal;
