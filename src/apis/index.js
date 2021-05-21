@@ -6,3 +6,4 @@ export { default as DeliveryRequests } from "./DeliveryRequests";
 export { default as CustomerRequests } from "./CustomerRequests";
 export { default as CompanyRequests } from "./CompanyRequests";
 export { default as UserRequests } from "./UserRequests";
+export { default as AddressRequests } from "./AddressRequests";

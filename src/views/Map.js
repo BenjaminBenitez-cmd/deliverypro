@@ -35,24 +35,27 @@ import {
   Button,
 } from "reactstrap";
 import axios from "axios";
+import { AddressRequests } from "apis";
 
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX;
 
 function Map() {
   const deliveries = useSelector((state) => state.deliveries.deliveries);
+  const [addresses, setAddresses] = useState(null);
   const [lng, setLng] = useState(-88.666375);
   const [lat, setLat] = useState(18.040019);
   const [zoom, setZoom] = useState(12);
   var truckLocation = [-88.666375, 18.040019];
   var warehouseLocation = [-88.666375, 18.040019];
-  var lastQueryTime = 0;
+  var testLocation = [-88.5609709, 18.0812688];
+  // var lastQueryTime = 0;
   var lastAtRestaurant = 0;
   var keepTrack = [];
-  var currentSchedule = [];
-  var currentRoute = null;
+  // var currentSchedule = [];
+  // var currentRoute = null;
   var pointHopper = {};
-  var pause = true;
-  var speedFactor = 50;
+  // var pause = true;
+  // var speedFactor = 50;
 
   const mapContainer = useRef(null);
   const map = useRef(null);
@@ -60,9 +63,47 @@ function Map() {
   var warehouse = turf.featureCollection([turf.point(warehouseLocation)]);
 
   // Create an empty GeoJSON feature collection for drop off locations
-  var dropoffs = turf.featureCollection([]);
+  let dropoffs = {
+    type: "FeatureCollection",
+    features: [
+      {
+        type: "Feature",
+        geometry: {
+          type: "Point",
+          coordinates: [-88.5609709, 18.0812688],
+        },
+        properties: {
+          id: 30,
+          street: "San Lazaro street",
+        },
+      },
+      {
+        type: "Feature",
+        geometry: {
+          type: "Point",
+          coordinates: [-88.570498, 18.0880828],
+        },
+        properties: {
+          id: 31,
+          street: "Spider lily street",
+        },
+      },
+    ],
+  };
   // Create an empty GeoJSON feature collection, which will be used as the data source for the route before users add any new data
   var nothing = turf.featureCollection([]);
+
+  useEffect(() => {
+    const fetchGeoJSON = async () => {
+      try {
+        const response = await AddressRequests.getAddressesRequest();
+        setAddresses(response.data.data.addresses);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchGeoJSON();
+  }, []);
 
   useEffect(() => {
     if (map.current) return;
@@ -72,19 +113,18 @@ function Map() {
       center: [lng, lat],
       zoom: zoom,
     });
-  });
+  }, []);
 
   useEffect(() => {
     if (!map.current) return;
-    map.current.on("load", function () {
+    map.current.on("load", async function () {
       var marker = document.createElement("div");
       marker.classList = "truck";
 
       // Create a new marker
-      const truckMarker = new mapboxgl.Marker(marker)
-        .setLngLat(truckLocation)
-        .addTo(map.current);
+      new mapboxgl.Marker(marker).setLngLat(truckLocation).addTo(map.current);
 
+      console.log(dropoffs);
       // Create a circle layer
       map.current.addLayer({
         id: "warehouse",
@@ -191,7 +231,11 @@ function Map() {
         updateDropoffs(dropoffs);
       });
     });
-  });
+  }, []);
+
+  // function OptimizedGenerator = () => {
+
+  // }
 
   function newDropoff(coords) {
     // Store the clicked point as a new GeoJSON feature with
@@ -202,6 +246,7 @@ function Map() {
     });
     dropoffs.features.push(pt);
     pointHopper[pt.properties.key] = pt;
+    console.log(pt);
 
     // Make a request to the Optimization API
     axios.get(assembleQueryURL()).then(function (response) {

@@ -33,7 +33,7 @@ export const toggleDelivery = createAsyncThunk(
   async (index, { rejectWithValue, dispatch }) => {
     try {
       const response = await DeliveryRequests.toggleDeliveryRequest(index);
-      dispatch(setMessage(response.data.message));
+      dispatch(setMessage("Toggled fullfillment status"));
       return response.data.data.delivery;
     } catch (err) {
       dispatch(setMessage("Unable to change delivery status"));

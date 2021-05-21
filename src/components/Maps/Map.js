@@ -16,7 +16,7 @@
 
 */
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 // eslint-disable-next-line import/no-webpack-loader-syntax
 import mapboxgl from "!mapbox-gl";
 
@@ -31,9 +31,9 @@ function Map({ longitude, latitude }) {
     longitude = -88.5591642;
   }
 
-  const [lng, setLng] = useState(-88.57103);
-  const [lat, setLat] = useState(18.084248);
-  const [zoom, setZoom] = useState(12);
+  // const [lng, setLng] = useState(-88.57103);
+  // const [lat, setLat] = useState(18.084248);
+  const zoom = 12;
 
   const mapContainer = useRef(null);
   const map = useRef(null);
@@ -43,7 +43,7 @@ function Map({ longitude, latitude }) {
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
       style: "mapbox://styles/mapbox/streets-v11",
-      center: [lng, lat],
+      center: [longitude, latitude],
       zoom: zoom,
     });
   });
@@ -51,12 +51,9 @@ function Map({ longitude, latitude }) {
   useEffect(() => {
     if (!map.current) return;
     map.current.on("load", function () {
-      var marker = new mapboxgl.Marker()
-        .setLngLat([longitude, latitude])
-        .addTo(map.current);
+      new mapboxgl.Marker().setLngLat([longitude, latitude]).addTo(map.current);
     });
   });
-  console.log(longitude, latitude);
   return (
     <Card>
       <div ref={mapContainer} className="mapContainer short" />

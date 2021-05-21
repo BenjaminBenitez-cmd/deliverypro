@@ -4,7 +4,6 @@ import { Row, Col } from "reactstrap";
 
 import SearchFilter from "components/Fields/SearchFilter";
 import DeliveryTable from "components/Tables.js/DeliveryTable";
-import FilterSideBar from "components/Sidebar/FilterSideBar";
 import { useDispatch, useSelector } from "react-redux";
 import { getDeliveries } from "redux/deliveries/DeliverySlice";
 

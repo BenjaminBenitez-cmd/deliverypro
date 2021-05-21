@@ -1,6 +1,5 @@
-import { ScheduleRequests } from "apis";
 import Map from "components/Maps/Map";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button, Col, Modal, ModalBody, ModalFooter, Row } from "reactstrap";
 import DeliveryEditModal from "./DeliveryEditModal";
 
@@ -11,18 +10,6 @@ const DeliveryDetailsModal = ({ isOpen, toggleModal, information }) => {
   const handleToggle = () => {
     setEditModalOpen(!isEditModalOpen);
   };
-
-  // useEffect(() => {
-  //   const fetchTime = async () => {
-  //     try {
-  //       const response = await ScheduleRequests.fetchTime(information.id);
-  //       setDeliveryTime(response.data.data.time);
-  //     } catch (e) {
-  //       console.log(e);
-  //     }
-  //   };
-  //   fetchTime();
-  // }, [information.id]);
 
   return (
     <>

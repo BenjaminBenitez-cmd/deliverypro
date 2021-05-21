@@ -12,7 +12,6 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-  Col,
   FormGroup,
   Row,
 } from "reactstrap";
