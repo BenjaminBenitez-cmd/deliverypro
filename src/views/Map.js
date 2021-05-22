@@ -124,7 +124,6 @@ function Map() {
       // Create a new marker
       new mapboxgl.Marker(marker).setLngLat(truckLocation).addTo(map.current);
 
-      console.log(dropoffs);
       // Create a circle layer
       map.current.addLayer({
         id: "warehouse",
@@ -168,7 +167,8 @@ function Map() {
         layout: {
           "icon-allow-overlap": true,
           "icon-ignore-placement": true,
-          "icon-image": "marker-15",
+          "icon-image": "circle-15",
+          "icon-size": 1.5,
         },
       });
 
