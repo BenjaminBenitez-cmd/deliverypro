@@ -5,6 +5,7 @@
   "homepage": "https://demos.creative-tim.com/black-dashboard-react/#/admin/dashboard",
   "dependencies": {
     "@fortawesome/fontawesome-free": "5.15.1",
+    "@mapbox/mapbox-gl-geocoder": "^4.7.1",
     "@reduxjs/toolkit": "^1.5.1",
     "@turf/turf": "^6.3.0",
     "axios": "^0.21.1",

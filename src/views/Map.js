@@ -17,10 +17,8 @@
 */
 
 import React, { useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
 // eslint-disable-next-line import/no-webpack-loader-syntax
 import mapboxgl from "!mapbox-gl";
-import * as turf from "@turf/turf";
 
 // reactstrap components
 import {
@@ -34,308 +32,99 @@ import {
   CardFooter,
   Button,
 } from "reactstrap";
-import axios from "axios";
 import { AddressRequests } from "apis";
+import classNames from "classnames";
 
-mapboxgl.accessToken = process.env.REACT_APP_MAPBOX;
+mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_API;
 
 function Map() {
-  const deliveries = useSelector((state) => state.deliveries.deliveries);
-  const [addresses, setAddresses] = useState(null);
-  const [lng, setLng] = useState(-88.666375);
-  const [lat, setLat] = useState(18.040019);
-  const [zoom, setZoom] = useState(12);
-  var truckLocation = [-88.666375, 18.040019];
-  var warehouseLocation = [-88.666375, 18.040019];
-  var testLocation = [-88.5609709, 18.0812688];
-  // var lastQueryTime = 0;
-  var lastAtRestaurant = 0;
-  var keepTrack = [];
-  // var currentSchedule = [];
-  // var currentRoute = null;
-  var pointHopper = {};
-  // var pause = true;
-  // var speedFactor = 50;
+  const [lng, setLng] = useState(-88.56177);
+  const [lat, setLat] = useState(18.077686);
+  const [zoom, setZoom] = useState(13);
+  const [toggle, setToggle] = useState(undefined);
+  const [geoJSON, setGeoJSON] = useState(null);
 
   const mapContainer = useRef(null);
   const map = useRef(null);
 
-  var warehouse = turf.featureCollection([turf.point(warehouseLocation)]);
+  const handleToggle = (num) => setToggle(num);
 
-  // Create an empty GeoJSON feature collection for drop off locations
-  let dropoffs = {
-    type: "FeatureCollection",
-    features: [
-      {
-        type: "Feature",
-        geometry: {
-          type: "Point",
-          coordinates: [-88.5609709, 18.0812688],
-        },
-        properties: {
-          id: 30,
-          street: "San Lazaro street",
-        },
-      },
-      {
-        type: "Feature",
-        geometry: {
-          type: "Point",
-          coordinates: [-88.570498, 18.0880828],
-        },
-        properties: {
-          id: 31,
-          street: "Spider lily street",
-        },
-      },
-    ],
+  const flyToStore = (currentFeature) => {
+    if (!map.current) return;
+    map.current.flyTo({
+      center: currentFeature.geometry.coordinates,
+      zoom: 15,
+    });
   };
-  // Create an empty GeoJSON feature collection, which will be used as the data source for the route before users add any new data
-  var nothing = turf.featureCollection([]);
+
+  const fetchGeoJSON = async () => {
+    try {
+      const response = await AddressRequests.getAddressesRequest();
+      setGeoJSON(response.data.data.addresses);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  function createPopUp(currentFeature) {
+    if (!map.current) return;
+    var popUps = document.getElementsByClassName("mapboxgl-popup");
+    /** Check if there is already a popup on the map and if so, remove it */
+    if (popUps[0]) popUps[0].remove();
+
+    new mapboxgl.Popup({ closeOnClick: false })
+      .setLngLat(currentFeature.geometry.coordinates)
+      .setHTML(
+        `<h3>${
+          currentFeature.properties.verified ? "Verified" : "Unverified"
+        } </h3><h4>${currentFeature.properties.name}</h4>`
+      )
+      .addTo(map.current);
+  }
 
   useEffect(() => {
-    const fetchGeoJSON = async () => {
-      try {
-        const response = await AddressRequests.getAddressesRequest();
-        setAddresses(response.data.data.addresses);
-      } catch (err) {
-        console.error(err);
-      }
-    };
     fetchGeoJSON();
   }, []);
+
+  useEffect(() => {
+    if (!toggle) return;
+    if (!geoJSON) return;
+    const isFound = geoJSON.features.find(
+      (node) => node.properties.id === toggle
+    );
+    if (!isFound) return;
+    flyToStore(isFound);
+    createPopUp(isFound);
+  }, [toggle, geoJSON]);
 
   useEffect(() => {
     if (map.current) return;
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
-      style: "mapbox://styles/mapbox/streets-v11",
+      style: "mapbox://styles/benjaminbenitez/ckoz72adp0il517o69jxikbt7",
       center: [lng, lat],
       zoom: zoom,
     });
+    fetchGeoJSON();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     if (!map.current) return;
-    map.current.on("load", async function () {
-      var marker = document.createElement("div");
-      marker.classList = "truck";
-
-      // Create a new marker
-      new mapboxgl.Marker(marker).setLngLat(truckLocation).addTo(map.current);
-
-      // Create a circle layer
+    if (!geoJSON) return;
+    if (map.current.getLayer("locations") !== undefined) return;
+    map.current.on("load", () => {
       map.current.addLayer({
-        id: "warehouse",
+        id: "locations",
         type: "circle",
+        /* Add a GeoJSON source containing place coordinates and information. */
         source: {
-          data: warehouse,
           type: "geojson",
+          data: geoJSON,
         },
-        paint: {
-          "circle-radius": 20,
-          "circle-color": "white",
-          "circle-stroke-color": "#3887be",
-          "circle-stroke-width": 3,
-        },
-      });
-
-      // Create a symbol layer on top of circle layer
-      map.current.addLayer({
-        id: "warehouse-symbol",
-        type: "symbol",
-        source: {
-          data: warehouse,
-          type: "geojson",
-        },
-        layout: {
-          "icon-image": "grocery-15",
-          "icon-size": 1,
-        },
-        paint: {
-          "text-color": "#3887be",
-        },
-      });
-
-      map.current.addLayer({
-        id: "dropoffs-symbol",
-        type: "symbol",
-        source: {
-          data: dropoffs,
-          type: "geojson",
-        },
-        layout: {
-          "icon-allow-overlap": true,
-          "icon-ignore-placement": true,
-          "icon-image": "circle-15",
-          "icon-size": 1.5,
-        },
-      });
-
-      map.current.addSource("route", {
-        type: "geojson",
-        data: nothing,
-      });
-
-      map.current.addLayer(
-        {
-          id: "routeline-active",
-          type: "line",
-          source: "route",
-          layout: {
-            "line-join": "round",
-            "line-cap": "round",
-          },
-          paint: {
-            "line-color": "#3887be",
-            "line-width": ["interpolate", ["linear"], ["zoom"], 12, 3, 22, 12],
-          },
-        },
-        "waterway-label"
-      );
-
-      map.current.addLayer(
-        {
-          id: "routearrows",
-          type: "symbol",
-          source: "route",
-          layout: {
-            "symbol-placement": "line",
-            "text-field": "▶",
-            "text-size": ["interpolate", ["linear"], ["zoom"], 12, 24, 22, 60],
-            "symbol-spacing": [
-              "interpolate",
-              ["linear"],
-              ["zoom"],
-              12,
-              30,
-              22,
-              160,
-            ],
-            "text-keep-upright": false,
-          },
-          paint: {
-            "text-color": "#3887be",
-            "text-halo-color": "hsl(55, 11%, 96%)",
-            "text-halo-width": 3,
-          },
-        },
-        "waterway-label"
-      );
-
-      // Listen for a click on the map.current
-      map.current.on("click", function (e) {
-        // When the map is clicked, add a new drop off point
-        // and update the `dropoffs-symbol` layer
-        newDropoff(map.current.unproject(e.point));
-        updateDropoffs(dropoffs);
       });
     });
-  }, []);
-
-  // function OptimizedGenerator = () => {
-
-  // }
-
-  function newDropoff(coords) {
-    // Store the clicked point as a new GeoJSON feature with
-    // two properties: `orderTime` and `key`
-    var pt = turf.point([coords.lng, coords.lat], {
-      orderTime: Date.now(),
-      key: Math.random(),
-    });
-    dropoffs.features.push(pt);
-    pointHopper[pt.properties.key] = pt;
-    console.log(pt);
-
-    // Make a request to the Optimization API
-    axios.get(assembleQueryURL()).then(function (response) {
-      const data = response.data;
-      // Create a GeoJSON feature collection
-      var routeGeoJSON = turf.featureCollection([
-        turf.feature(data.trips[0].geometry),
-      ]);
-
-      // If there is no route provided, reset
-      if (!data.trips[0]) {
-        routeGeoJSON = nothing;
-      } else {
-        // Update the `route` source by getting the route source
-        // and setting the data equal to routeGeoJSON
-        map.current.getSource("route").setData(routeGeoJSON);
-      }
-
-      //
-      if (data.waypoints.length === 12) {
-        window.alert(
-          "Maximum number of points reached. Read more at docs.mapbox.com/api/navigation/#optimization."
-        );
-      }
-    });
-  }
-
-  function updateDropoffs(geojson) {
-    map.current.getSource("dropoffs-symbol").setData(geojson);
-  }
-
-  // Here you'll specify all the parameters necessary for requesting a response from the Optimization API
-  function assembleQueryURL() {
-    // Store the location of the truck in a variable called coordinates
-    var coordinates = [truckLocation];
-    var distributions = [];
-    keepTrack = [truckLocation];
-
-    // Create an array of GeoJSON feature collections for each point
-    var restJobs = objectToArray(pointHopper);
-
-    // If there are actually orders from this restaurant
-    if (restJobs.length > 0) {
-      // Check to see if the request was made after visiting the restaurant
-      var needToPickUp =
-        restJobs.filter(function (d, i) {
-          return d.properties.orderTime > lastAtRestaurant;
-        }).length > 0;
-
-      // If the request was made after picking up from the restaurant,
-      // Add the restaurant as an additional stop
-      if (needToPickUp) {
-        var restaurantIndex = coordinates.length;
-        // Add the restaurant as a coordinate
-        coordinates.push(warehouseLocation);
-        // push the restaurant itself into the array
-        keepTrack.push(pointHopper.warehouse);
-      }
-
-      restJobs.forEach(function (d, i) {
-        // Add dropoff to list
-        keepTrack.push(d);
-        coordinates.push(d.geometry.coordinates);
-        // if order not yet picked up, add a reroute
-        if (needToPickUp && d.properties.orderTime > lastAtRestaurant) {
-          distributions.push(restaurantIndex + "," + (coordinates.length - 1));
-        }
-      });
-    }
-
-    // Set the profile to `driving`
-    // Coordinates will include the current location of the truck,
-    return (
-      "https://api.mapbox.com/optimized-trips/v1/mapbox/driving/" +
-      coordinates.join(";") +
-      "?distributions=" +
-      distributions.join(";") +
-      "&overview=full&steps=true&geometries=geojson&source=first&access_token=" +
-      mapboxgl.accessToken
-    );
-  }
-
-  function objectToArray(obj) {
-    var keys = Object.keys(obj);
-    var routeGeoJSON = keys.map(function (key) {
-      return obj[key];
-    });
-    return routeGeoJSON;
-  }
+  }, [geoJSON]);
 
   useEffect(() => {
     if (!map.current) return;
@@ -345,11 +134,7 @@ function Map() {
       setZoom(map.current.getZoom().toFixed(2));
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  });
-
-  const filterPending = (array) => {
-    return array.filter((item) => item.delivery_status === false);
-  };
+  }, []);
 
   return (
     <>
@@ -361,7 +146,13 @@ function Map() {
               <CardBody>
                 <Row>
                   <Col sm={4}>
-                    <MapDeliveryList deliveries={filterPending(deliveries)} />
+                    {geoJSON && (
+                      <MapDeliveryList
+                        deliveries={geoJSON.features}
+                        handleToggle={handleToggle}
+                        activeID={toggle}
+                      />
+                    )}
                   </Col>
                   <Col sm={8}>
                     <Card>
@@ -383,7 +174,7 @@ function Map() {
   );
 }
 
-const MapDeliveryList = ({ deliveries }) => {
+const MapDeliveryList = ({ deliveries, handleToggle, activeID }) => {
   return (
     <Card>
       <CardHeader>
@@ -394,18 +185,26 @@ const MapDeliveryList = ({ deliveries }) => {
           <Table>
             <tbody>
               {deliveries &&
-                deliveries.map((delivery) => (
-                  <tr key={delivery.id} className="card-plain">
-                    <td>
-                      <p className="title">
-                        {delivery.first_name + " " + delivery.last_name}
-                      </p>
-                      <p className="text-muted">
-                        {delivery.street + ", " + delivery.district}
-                      </p>
-                    </td>
-                  </tr>
-                ))}
+                deliveries.map((delivery) => {
+                  const rowClass = classNames("title", {
+                    "text-primary": activeID === delivery.id,
+                  });
+                  return (
+                    <tr
+                      key={delivery.properties.id}
+                      onClick={() => handleToggle(delivery.properties.id)}
+                    >
+                      <td>
+                        <p className={rowClass}>{delivery.properties.name}</p>
+                        <p className="text-muted">
+                          {delivery.properties.verified
+                            ? "Verified"
+                            : "Unverified"}
+                        </p>
+                      </td>
+                    </tr>
+                  );
+                })}
             </tbody>
           </Table>
         </div>

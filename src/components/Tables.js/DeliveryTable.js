@@ -14,12 +14,15 @@ import { useDispatch } from "react-redux";
 import { toggleDelivery } from "redux/deliveries/DeliverySlice";
 import DeliveryDetailsModal from "components/Modals/DeliveryDetailsModal";
 import LoadingSpinner from "components/loading/LoadingSpinner";
+import useFilterDays from "../../hooks/useFilterDays";
 
 const DeliveryTable = ({ deliveries, status }) => {
   const dispatch = useDispatch();
   const [isOpen, setIsOpen] = useState(false);
   const [delivery, setDelivery] = useState({});
+  // const schedule = useSelector((state) => state.schedule);
 
+  const { deliveryDayToText, deliveryTimeToText } = useFilterDays();
   //handle the toggling of the individual deliveries
   const handleToggleOpen = (id) => {
     if (id) {
@@ -74,9 +77,12 @@ const DeliveryTable = ({ deliveries, status }) => {
                       {node.first_name} {node.last_name}
                     </td>
                     <td>
-                      {node.delivery_day} {node.time_start} : {node.time_end}
+                      {deliveryDayToText(node.delivery_day)}{" "}
+                      {deliveryTimeToText(node.delivery_time)}
                     </td>
-                    <td>{node.phone_number}</td>
+                    <td>
+                      <p className="text-muted">{node.phone_number}</p>
+                    </td>
                     <td>{node.street}</td>
                     <td>{node.district}</td>
                   </tr>

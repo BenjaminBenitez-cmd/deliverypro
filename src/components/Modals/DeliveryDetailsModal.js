@@ -2,10 +2,13 @@ import Map from "components/Maps/Map";
 import { useState } from "react";
 import { Button, Col, Modal, ModalBody, ModalFooter, Row } from "reactstrap";
 import DeliveryEditModal from "./DeliveryEditModal";
+import useFilterDays from "../../hooks/useFilterDays";
 
 const DeliveryDetailsModal = ({ isOpen, toggleModal, information }) => {
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   // const [deliveryTime, setDeliveryTime] = useState(null);
+
+  const { deliveryDayToText, deliveryTimeToText } = useFilterDays();
 
   const handleToggle = () => {
     setEditModalOpen(!isEditModalOpen);
@@ -31,27 +34,46 @@ const DeliveryDetailsModal = ({ isOpen, toggleModal, information }) => {
         <ModalBody>
           <Row>
             <Col sm={6}>
-              <div className="py-2">
-                <strong>Buyer </strong>
-                {information.first_name + " " + information.last_name}
-              </div>
-              <div className="py-2">
-                <strong>Email</strong> {information.email}
-              </div>
-              <div className="py-2">
-                <strong>Phone Number</strong> {information.phone_number}
-              </div>
-              <div className="py-2">
-                <strong>Delivery Time period</strong>{" "}
-                {information.time_start + " to " + information.time_end}
-              </div>
-              <div className="py-2">
-                <strong>Location</strong>{" "}
-                {information.street + ", " + information.district}
-              </div>
+              <section>
+                <div>
+                  <p className="title">Buyer </p>
+                  <p> {information.first_name + " " + information.last_name}</p>
+                </div>
+                <div>
+                  <p className="title">Email</p>
+                  <p className="text-muted">{information.email}</p>
+                </div>
+                <div>
+                  <p className="title">Phone Number</p>
+                  <p className="text-muted">{information.phone_number}</p>
+                </div>
+              </section>
+              <section>
+                <div className="py-2">
+                  <p className="title">Delivery Time period</p>
+                  <p className="text-muted">
+                    {deliveryTimeToText(information.delivery_time)}
+                  </p>
+                </div>
+                <div className="py-2">
+                  <p className="title">Delivery Day</p>
+                  <p className="text-muted">
+                    {deliveryDayToText(information.delivery_day)}
+                  </p>
+                </div>
+              </section>
+              <section>
+                <div className="py-2">
+                  <p className="title">Location</p>{" "}
+                  <p>{information.street + ", " + information.district}</p>
+                </div>
+              </section>
             </Col>
             <Col sm={6}>
-              <Map />
+              <Map
+                latitude={information.geolocation.coordinates[1]}
+                longitude={information.geolocation.coordinates[0]}
+              />
             </Col>
           </Row>
         </ModalBody>
@@ -68,7 +90,7 @@ const DeliveryDetailsModal = ({ isOpen, toggleModal, information }) => {
         <DeliveryEditModal
           isOpen={isEditModalOpen}
           toggleModal={handleToggle}
-          information={{ hello: "hello" }}
+          information={information}
         />
       )}
     </>

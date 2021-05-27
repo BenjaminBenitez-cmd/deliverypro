@@ -19,20 +19,17 @@
 import React, { useEffect, useRef } from "react";
 // eslint-disable-next-line import/no-webpack-loader-syntax
 import mapboxgl from "!mapbox-gl";
+import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
+import "@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css";
 
 // reactstrap components
 import { Card } from "reactstrap";
 
-mapboxgl.accessToken = process.env.REACT_APP_MAPBOX;
+mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_API;
 
-function Map({ longitude, latitude }) {
-  if (!longitude || latitude) {
-    latitude = 18.0819307;
-    longitude = -88.5591642;
-  }
+function Map({ longitude, latitude, draggable, search }) {
+  console.log(longitude, latitude);
 
-  // const [lng, setLng] = useState(-88.57103);
-  // const [lat, setLat] = useState(18.084248);
   const zoom = 12;
 
   const mapContainer = useRef(null);
@@ -42,18 +39,29 @@ function Map({ longitude, latitude }) {
     if (map.current) return;
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
-      style: "mapbox://styles/mapbox/streets-v11",
+      style: "mapbox://styles/benjaminbenitez/ckoz72adp0il517o69jxikbt7",
       center: [longitude, latitude],
       zoom: zoom,
     });
+
+    new mapboxgl.Marker({ draggable: draggable })
+      .setLngLat([longitude, latitude])
+      .addTo(map.current);
+
+    if (!search) return;
+
+    let geocoder = new MapboxGeocoder({
+      accessToken: mapboxgl.accessToken,
+      placeholder: "Search for places in Orange Walk",
+      mapboxgl: mapboxgl,
+      marker: false,
+    });
+
+    map.current.on("load", function () {});
+
+    map.current.addControl(geocoder);
   });
 
-  useEffect(() => {
-    if (!map.current) return;
-    map.current.on("load", function () {
-      new mapboxgl.Marker().setLngLat([longitude, latitude]).addTo(map.current);
-    });
-  });
   return (
     <Card>
       <div ref={mapContainer} className="mapContainer short" />

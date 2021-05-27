@@ -16,9 +16,9 @@ export const getDeliveries = createAsyncThunk(
 
 export const addDelivery = createAsyncThunk(
   "deliveries/addDelivery",
-  async (id, { rejectWithValue, dispatch }) => {
+  async (values, { rejectWithValue, dispatch }) => {
     try {
-      const results = await DeliveryRequests.postDeliveryRequest(id);
+      const results = await DeliveryRequests.postDeliveryRequest(values);
       dispatch(setMessage("Success, added delivery"));
       return results.data.data.delivery;
     } catch (err) {
@@ -42,6 +42,21 @@ export const toggleDelivery = createAsyncThunk(
   }
 );
 
+export const updateDelivery = createAsyncThunk(
+  "deliveries/updateDelivery",
+  async (values, { rejectWithValue, dispatch }) => {
+    try {
+      const { id, body } = values;
+      await DeliveryRequests.updateDeliveryRequest(id, body);
+      dispatch(setMessage("Toggled fullfillment status"));
+      return { id, body };
+    } catch (err) {
+      dispatch(setMessage("Unable to change delivery status"));
+      return rejectWithValue([], err);
+    }
+  }
+);
+
 export const deliverySlice = createSlice({
   name: "deliveries",
   initialState: {
@@ -55,9 +70,6 @@ export const deliverySlice = createSlice({
   reducers: {
     filterDeliveries: (state, action) => {
       state.filter = action.payload;
-    },
-    updateDelivery: (state, action) => {
-      state.deliveries[action.payload] = true;
     },
   },
   extraReducers: {
@@ -92,11 +104,27 @@ export const deliverySlice = createSlice({
       state.deliveries[index].delivery_status = delivery_status;
       state.status = "success";
     },
+    [updateDelivery.fulfilled]: (state, action) => {
+      state.status = "success";
+      const { id, body } = action.payload;
+      if (!id || !body) return state;
+      const newDelivery = { id, ...body };
+      state.deliveries = [
+        ...state.deliveries,
+        {
+          ...newDelivery,
+          geolocation: {
+            type: "Point",
+            coordintates: [body.longitude, body.latitude],
+          },
+        },
+      ];
+    },
   },
 });
 
 const { actions, reducer } = deliverySlice;
 
-export const { filterDeliveries, updateDelivery } = actions;
+export const { filterDeliveries } = actions;
 
 export default reducer;
