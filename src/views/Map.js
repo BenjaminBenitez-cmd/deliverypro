@@ -145,7 +145,7 @@ function Map() {
               <CardHeader>Delivery Map</CardHeader>
               <CardBody>
                 <Row>
-                  <Col sm={4}>
+                  <Col sm={3}>
                     {geoJSON && (
                       <MapDeliveryList
                         deliveries={geoJSON.features}
@@ -154,7 +154,7 @@ function Map() {
                       />
                     )}
                   </Col>
-                  <Col sm={8}>
+                  <Col sm={9}>
                     <Card>
                       <div>
                         <div className="sidebarStyle">
