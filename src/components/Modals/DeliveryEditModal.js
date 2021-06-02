@@ -8,22 +8,33 @@ import {
   Col,
   ModalFooter,
   FormGroup,
+  Container,
 } from "reactstrap";
 import * as Yup from "yup";
 import useFilterDays from "hooks/useFilterDays";
 import { useDispatch } from "react-redux";
 import { updateDelivery } from "redux/deliveries/DeliverySlice";
 import Map from "../Maps/Map";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const DeliveryEditModal = ({ isOpen, toggleModal, information }) => {
-  const [step, setStep] = useState(1);
   const dispatch = useDispatch();
-  const { deliveryUniqueDays, days, deliveryDayToText } = useFilterDays();
-  const phoneRegExp =
-    /^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/;
+  const [step, setStep] = useState(1);
 
-  const initialValues = {
+  const stepUp = () => {
+    if (step > 3) {
+      return setStep((prev) => (prev = 1));
+    }
+    setStep((prev) => prev + 1);
+  };
+  const stepDown = () => setStep((prev) => prev - 1);
+  const [location, setLocation] = useState({
+    street: information.street,
+    district: information.district,
+    longitude: information.geolocation.coordinates[0],
+    latitude: information.geolocation.coordinates[1],
+  });
+  const values = {
     first_name: information.first_name,
     last_name: information.last_name,
     email: information.email,
@@ -32,6 +43,18 @@ const DeliveryEditModal = ({ isOpen, toggleModal, information }) => {
     delivery_day: information.delivery_day,
     delivery_time: information.delivery_time,
   };
+  const [initialValues, setInitialValues] = useState(values);
+
+  const updateLocation = (location) => {
+    setLocation((prev) => {
+      return { ...prev, ...location };
+    });
+  };
+
+  const { deliveryUniqueDays, days, deliveryDayToText, deliveryTimeToText } =
+    useFilterDays();
+  const phoneRegExp =
+    /^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/;
 
   const validationSchema = Yup.object({
     first_name: Yup.string()
@@ -48,143 +71,173 @@ const DeliveryEditModal = ({ isOpen, toggleModal, information }) => {
   });
 
   const onSubmit = async (values, { setSubmitting }) => {
-    alert(JSON.stringify(values));
-    dispatch(updateDelivery({ id: information.id, body: values }));
+    const combinedValues = { ...values, ...location };
+    dispatch(updateDelivery({ id: information.id, body: combinedValues }));
     setSubmitting(false);
     toggleModal();
   };
 
   return (
-    <Formik
-      initialValues={initialValues}
-      validationSchema={validationSchema}
-      onSubmit={onSubmit}
+    <Modal
+      isOpen={isOpen}
+      toggle={toggleModal}
+      modalClassName="modal-black"
+      size="lg"
     >
-      {({ values }) => (
-        <Modal
-          isOpen={isOpen}
-          toggle={toggleModal}
-          modalClassName="modal-black"
-          size="lg"
-          style={
-            ({ marginTop: "-105px" }, step === 1 && { backgroundColor: "red" })
-          }
+      <div className="modal-header mb-3">
+        <h2 className="modal-title" id="exampleModalLabel">
+          {information.first_name} {information.last_name}
+        </h2>
+        <button
+          type="button"
+          className="close"
+          data-dismiss="modal"
+          aria-hidden="true"
+          onClick={toggleModal}
         >
-          <div className="modal-header mb-3">
-            <h2 className="modal-title" id="exampleModalLabel">
-              {information.first_name} {information.last_name}
-            </h2>
-            <button
-              type="button"
-              className="close"
-              data-dismiss="modal"
-              aria-hidden="true"
-              onClick={toggleModal}
-            >
-              <i className="tim-icons icon-simple-remove" />
-            </button>
-          </div>
-          <Form>
-            <ModalBody>
-              <EditDeliveryDetailsForm
-                deliveryDayToText={deliveryDayToText}
-                deliveryUniqueDays={deliveryUniqueDays}
-                values={{ delivery_day: 3 }}
-                days={days}
-              />
-              <Row>
-                <Map
-                  longitude={information.geolocation.coordinates[0]}
-                  latitude={information.geolocation.coordinates[1]}
-                  draggable={true}
-                  search={true}
-                />
-              </Row>
-            </ModalBody>
-            <ModalFooter className="p-3">
-              <Button color="secondary" onClick={toggleModal}>
-                Close
-              </Button>
-              <Button className="btn-fill" color="primary" type="submit">
-                Save
-              </Button>
-            </ModalFooter>
-          </Form>
-        </Modal>
-      )}
-    </Formik>
+          <i className="tim-icons icon-simple-remove" />
+        </button>
+      </div>
+      <Formik
+        initialValues={initialValues}
+        validationSchema={validationSchema}
+        onSubmit={onSubmit}
+      >
+        {({ values }) => (
+          <>
+            <Form>
+              <ModalBody>
+                {step === 1 && (
+                  <>
+                    <Row>
+                      <Col className="pr-md-1" md="6">
+                        <FormGroup>
+                          <MyTextInput
+                            label="First Name"
+                            name="first_name"
+                            type="text"
+                          />
+                        </FormGroup>
+                      </Col>
+                      <Col className="px-md-1" md="6">
+                        <FormGroup>
+                          <MyTextInput
+                            label="Last Name"
+                            name="last_name"
+                            type="text"
+                          />
+                        </FormGroup>
+                      </Col>
+                      <Col className="pr-md-1" md="6">
+                        <FormGroup>
+                          <MyTextInput
+                            label="Email"
+                            name="email"
+                            type="email"
+                          />
+                        </FormGroup>
+                      </Col>
+                      <Col className="px-md-1" md="6">
+                        <FormGroup>
+                          <MyTextInput
+                            label="Phone Number"
+                            placeholder="xxx xxx xxxx"
+                            name="phone_number"
+                            type="tel"
+                          />
+                        </FormGroup>
+                      </Col>
+                      <Col className="pr-md-3" md="12">
+                        <FormGroup>
+                          <MyTextInput
+                            label="Description"
+                            name="description"
+                            type="text"
+                          />
+                        </FormGroup>
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col className="pr-md-1" md="6">
+                        <FormGroup>
+                          <MySelect label="Delivery Day" name="delivery_day">
+                            <option value={values.delivery_day}>
+                              {deliveryDayToText(values.delivery_day)}
+                            </option>
+                            {days &&
+                              deliveryUniqueDays().map((day) => (
+                                <option key={day.id} value={day.id}>
+                                  {day.name}
+                                </option>
+                              ))}
+                          </MySelect>
+                        </FormGroup>
+                      </Col>
+                      <Col className="px-md-1" md="6">
+                        <FormGroup>
+                          <MySelect label="Delivery Time" name="delivery_time">
+                            <option value={values.delivery_time}>
+                              {deliveryTimeToText(values.delivery_time)}
+                            </option>
+                            {days &&
+                              days.map((day) => {
+                                return (
+                                  day.name_of_day_id ===
+                                    values.delivery_day && (
+                                    <option key={day.id} value={day.id}>
+                                      {day.time_start + " to " + day.time_end}
+                                    </option>
+                                  )
+                                );
+                              })}
+                          </MySelect>
+                        </FormGroup>
+                      </Col>
+                    </Row>
+                  </>
+                )}
+                {step === 2 && (
+                  <Container>
+                    <Row>
+                      <p>Confirm the client's address</p>
+                      <Map
+                        longitude={information.geolocation.coordinates[0]}
+                        latitude={information.geolocation.coordinates[1]}
+                        draggable={true}
+                        search={true}
+                        mapStyle="tall"
+                        updateLocation={updateLocation}
+                      />
+                    </Row>
+                  </Container>
+                )}
+              </ModalBody>
+              <ModalFooter className="p-3">
+                <Button color="secondary" onClick={toggleModal}>
+                  Close
+                </Button>
+                {step === 1 && (
+                  <Button
+                    className="btn-fill"
+                    type="button"
+                    color="primary"
+                    onClick={stepUp}
+                  >
+                    Next
+                  </Button>
+                )}
+                {step === 2 && (
+                  <Button className="btn-fill" type="submit" color="primary">
+                    Save
+                  </Button>
+                )}
+              </ModalFooter>
+            </Form>
+          </>
+        )}
+      </Formik>
+    </Modal>
   );
 };
-
-const EditDeliveryDetailsForm = (
-  deliveryDayToText,
-  days,
-  values,
-  deliveryUniqueDays
-) => (
-  <>
-    <Row>
-      <Col className="pr-md-1" md="6">
-        <FormGroup>
-          <MyTextInput label="First Name" name="first_name" type="text" />
-        </FormGroup>
-      </Col>
-      <Col className="px-md-1" md="6">
-        <FormGroup>
-          <MyTextInput label="Last Name" name="last_name" type="text" />
-        </FormGroup>
-      </Col>
-      <Col className="pr-md-1" md="6">
-        <FormGroup>
-          <MyTextInput label="Email" name="email" type="email" />
-        </FormGroup>
-      </Col>
-      <Col className="px-md-1" md="6">
-        <FormGroup>
-          <MyTextInput
-            label="Phone Number"
-            placeholder="xxx xxx xxxx"
-            name="phone_number"
-            type="tel"
-          />
-        </FormGroup>
-      </Col>
-    </Row>
-    <Row>
-      <Col className="pr-md-1" md="6">
-        <FormGroup>
-          <MySelect label="Delivery Day" name="delivery_day">
-            <option value={values.delivery_day}>
-              {deliveryDayToText(values.delivery_day)}
-            </option>
-            {days &&
-              deliveryUniqueDays().map((day) => (
-                <option key={day.id} value={day.id}>
-                  {day.name}
-                </option>
-              ))}
-          </MySelect>
-        </FormGroup>
-      </Col>
-      <Col className="px-md-1" md="6">
-        <FormGroup>
-          <MySelect label="Delivery Time" name="delivery_time">
-            <option value="">Select a Time Period</option>
-            {days &&
-              days.map((day) => {
-                return (
-                  day.name_of_day_id === values.delivery_day && (
-                    <option key={day.id} value={day.id}>
-                      {day.time_start + " to " + day.time_end}
-                    </option>
-                  )
-                );
-              })}
-          </MySelect>
-        </FormGroup>
-      </Col>
-    </Row>
-  </>
-);
 
 export default DeliveryEditModal;

@@ -48,7 +48,7 @@ export const updateDelivery = createAsyncThunk(
     try {
       const { id, body } = values;
       await DeliveryRequests.updateDeliveryRequest(id, body);
-      dispatch(setMessage("Toggled fullfillment status"));
+      dispatch(setMessage("Updated delivery!"));
       return { id, body };
     } catch (err) {
       dispatch(setMessage("Unable to change delivery status"));
@@ -107,18 +107,17 @@ export const deliverySlice = createSlice({
     [updateDelivery.fulfilled]: (state, action) => {
       state.status = "success";
       const { id, body } = action.payload;
-      if (!id || !body) return state;
-      const newDelivery = { id, ...body };
-      state.deliveries = [
-        ...state.deliveries,
-        {
-          ...newDelivery,
-          geolocation: {
-            type: "Point",
-            coordintates: [body.longitude, body.latitude],
-          },
+      const index = state.deliveries.findIndex(
+        (delivery) => delivery.id === id
+      );
+      state.deliveries[index] = {
+        id,
+        ...body,
+        geolocation: {
+          type: "Point",
+          coordinates: [body.longitude, body.latitude],
         },
-      ];
+      };
     },
   },
 });

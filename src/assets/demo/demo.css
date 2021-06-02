@@ -152,7 +152,7 @@
 }
 
 .mapContainer {
-  position: absolute;
+  position: relative;
   top: 0;
   right: 0;
   left: 0;
@@ -232,4 +232,8 @@
 
 .listings .active {
   background-color: #1e1e2e;
+}
+
+.deliveryEditMap {
+  position: relative;
 }

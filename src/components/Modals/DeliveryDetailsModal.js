@@ -69,12 +69,7 @@ const DeliveryDetailsModal = ({ isOpen, toggleModal, information }) => {
                 </div>
               </section>
             </Col>
-            <Col sm={6}>
-              <Map
-                latitude={information.geolocation.coordinates[1]}
-                longitude={information.geolocation.coordinates[0]}
-              />
-            </Col>
+            <Col sm={6}></Col>
           </Row>
         </ModalBody>
         <ModalFooter className="p-4">
