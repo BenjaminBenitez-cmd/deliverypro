@@ -15,7 +15,7 @@ import useFilterDays from "hooks/useFilterDays";
 import { useDispatch } from "react-redux";
 import { updateDelivery } from "redux/deliveries/DeliverySlice";
 import Map from "../Maps/Map";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 const DeliveryEditModal = ({ isOpen, toggleModal, information }) => {
   const dispatch = useDispatch();
@@ -83,10 +83,11 @@ const DeliveryEditModal = ({ isOpen, toggleModal, information }) => {
       toggle={toggleModal}
       modalClassName="modal-black"
       size="lg"
+      style={{ marginTop: "-100px" }}
     >
       <div className="modal-header mb-3">
         <h2 className="modal-title" id="exampleModalLabel">
-          {information.first_name} {information.last_name}
+          Confirm {information.first_name}'s address
         </h2>
         <button
           type="button"
@@ -199,7 +200,6 @@ const DeliveryEditModal = ({ isOpen, toggleModal, information }) => {
                 {step === 2 && (
                   <Container>
                     <Row>
-                      <p>Confirm the client's address</p>
                       <Map
                         longitude={information.geolocation.coordinates[0]}
                         latitude={information.geolocation.coordinates[1]}

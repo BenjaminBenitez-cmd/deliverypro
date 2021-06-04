@@ -15,6 +15,7 @@ import { toggleDelivery } from "redux/deliveries/DeliverySlice";
 import DeliveryDetailsModal from "components/Modals/DeliveryDetailsModal";
 import LoadingSpinner from "components/loading/LoadingSpinner";
 import useFilterDays from "../../hooks/useFilterDays";
+import ExcelConverter from "components/utils/ExcelConverter";
 
 const DeliveryTable = ({ deliveries, status }) => {
   const dispatch = useDispatch();
@@ -23,6 +24,16 @@ const DeliveryTable = ({ deliveries, status }) => {
   // const schedule = useSelector((state) => state.schedule);
 
   const { deliveryDayToText, deliveryTimeToText } = useFilterDays();
+
+  const generateDeliveries = (deliveries) => {
+    return deliveries.map((item) => {
+      return {
+        ...item,
+        delivery_day: deliveryDayToText(item.delivery_day),
+        delivery_time: deliveryTimeToText(item.delivery_time),
+      };
+    });
+  };
   //handle the toggling of the individual deliveries
   const handleToggleOpen = (id) => {
     if (id) {
@@ -42,6 +53,10 @@ const DeliveryTable = ({ deliveries, status }) => {
       <Card className="card-plain">
         <CardHeader>
           <CardTitle tag="h4">Deliveries</CardTitle>
+          <ExcelConverter
+            csvData={generateDeliveries(deliveries)}
+            fileName={"deliveries"}
+          />
         </CardHeader>
         <CardBody>
           <Table className="tablesorter" responsive striped>

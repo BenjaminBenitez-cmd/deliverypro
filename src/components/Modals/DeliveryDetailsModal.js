@@ -16,7 +16,7 @@ const DeliveryDetailsModal = ({ isOpen, toggleModal, information }) => {
 
   return (
     <>
-      <Modal isOpen={isOpen} toggle={toggleModal} size="lg">
+      <Modal isOpen={isOpen} toggle={toggleModal} size="md">
         <div className="modal-header">
           <h2 className="modal-title" id="exampleModalLabel">
             {information.first_name} {information.last_name}
@@ -48,6 +48,8 @@ const DeliveryDetailsModal = ({ isOpen, toggleModal, information }) => {
                   <p className="text-muted">{information.phone_number}</p>
                 </div>
               </section>
+            </Col>
+            <Col sm={6}>
               <section>
                 <div className="py-2">
                   <p className="title">Delivery Time period</p>
@@ -69,7 +71,6 @@ const DeliveryDetailsModal = ({ isOpen, toggleModal, information }) => {
                 </div>
               </section>
             </Col>
-            <Col sm={6}></Col>
           </Row>
         </ModalBody>
         <ModalFooter className="p-4">

@@ -20,7 +20,7 @@ var ps;
 
 function Admin(props) {
   const notificationAlertRef = React.useRef(null);
-  const { message } = useSelector(state => state.notification);
+  const { message } = useSelector((state) => state.notification);
 
   const notify = (place, message) => {
     var color = Math.floor(Math.random() * 5 + 1);
@@ -49,9 +49,7 @@ function Admin(props) {
       place: place,
       message: (
         <div>
-          <div>
-            {message}
-          </div>
+          <div>{message}</div>
         </div>
       ),
       type: type,
@@ -130,9 +128,9 @@ function Admin(props) {
   };
 
   React.useEffect(() => {
-    if(message){
-      notify('br', message);
-    } 
+    if (message) {
+      notify("br", message);
+    }
   }, [message]);
 
   return (
@@ -144,7 +142,7 @@ function Admin(props) {
               routes={routes}
               logo={{
                 outterLink: "https://www.creative-tim.com/",
-                text: "Creative Tim",
+                text: "Delivery Pro",
                 imgSrc: logo,
               }}
               toggleSidebar={toggleSidebar}
@@ -155,13 +153,13 @@ function Admin(props) {
                 toggleSidebar={toggleSidebar}
                 sidebarOpened={sidebarOpened}
               />
-                <Switch>
-                  {getRoutes(routes)}
-                  <Redirect from="*" to="/admin/dashboard" />
-                </Switch>
-                <div className="react-notification-alert-container">
-                  <NotificationAlert ref={notificationAlertRef} />
-                </div>
+              <Switch>
+                {getRoutes(routes)}
+                <Redirect from="*" to="/admin/dashboard" />
+              </Switch>
+              <div className="react-notification-alert-container">
+                <NotificationAlert ref={notificationAlertRef} />
+              </div>
 
               {
                 // we don't want the Footer to be rendered on map page

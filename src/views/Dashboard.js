@@ -46,6 +46,7 @@ import {
 import { chartExample1 } from "variables/charts.js";
 import { useDispatch, useSelector } from "react-redux";
 import { getSchedules } from "redux/schedules/ScheduleSlice";
+import { getDeliveries } from "redux/deliveries/DeliverySlice";
 
 function Dashboard(props) {
   const dispatch = useDispatch();
@@ -55,10 +56,12 @@ function Dashboard(props) {
   const setBgChartData = (name) => {
     setbigChartData(name);
   };
+  console.log(deliveries);
 
   useEffect(() => {
     dispatch(getSchedules());
-  });
+    dispatch(getDeliveries());
+  }, []);
 
   return (
     <>
@@ -379,20 +382,23 @@ function Dashboard(props) {
                     </tr>
                   </thead>
                   <tbody>
-                    {deliveries.map((delivery) => {
-                      return (
-                        delivery.delivery_status && (
-                          <tr key={delivery.id}>
-                            <td>
-                              {delivery.first_name} {delivery.last_name}
-                            </td>
-                            <td>{delivery.phone_number}</td>
-                            <td>{delivery.delivery_day}</td>
-                            <td className="text-center">{delivery.district}</td>
-                          </tr>
-                        )
-                      );
-                    })}
+                    {deliveries &&
+                      deliveries.map((delivery) => {
+                        return (
+                          delivery.delivery_status === false && (
+                            <tr key={delivery.id}>
+                              <td>
+                                {delivery.first_name} {delivery.last_name}
+                              </td>
+                              <td>{delivery.phone_number}</td>
+                              <td>{delivery.delivery_day}</td>
+                              <td className="text-center">
+                                {delivery.district}
+                              </td>
+                            </tr>
+                          )
+                        );
+                      })}
                   </tbody>
                 </Table>
               </CardBody>
