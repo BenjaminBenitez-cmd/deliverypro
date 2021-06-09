@@ -38,14 +38,14 @@ import classNames from "classnames";
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_API;
 
 function Map() {
+  const mapContainer = useRef(null);
+  const map = useRef(null);
+
   const [lng, setLng] = useState(-88.56177);
   const [lat, setLat] = useState(18.077686);
   const [zoom, setZoom] = useState(13);
   const [toggle, setToggle] = useState(undefined);
   const [geoJSON, setGeoJSON] = useState(null);
-
-  const mapContainer = useRef(null);
-  const map = useRef(null);
 
   const handleToggle = (num) => setToggle(num);
 
@@ -59,7 +59,7 @@ function Map() {
 
   const fetchGeoJSON = async () => {
     try {
-      const response = await AddressRequests.getAddressesRequest();
+      const response = await AddressRequests.getOne();
       setGeoJSON(response.data.data.addresses);
     } catch (error) {
       console.error(error);
@@ -175,6 +175,32 @@ function Map() {
 }
 
 const MapDeliveryList = ({ deliveries, handleToggle, activeID }) => {
+  function renderDeliveries() {
+    return (
+      deliveries &&
+      deliveries.map((delivery) => {
+        return (
+          <tr
+            key={delivery.properties.id}
+            onClick={() => handleToggle(delivery.properties.id)}
+          >
+            <td>
+              <Button
+                className="btn btn-link pl-0"
+                color="primary"
+                role="button"
+              >
+                {delivery.properties.name}
+              </Button>
+              <p className="text-muted">
+                {delivery.properties.verified ? "Verified" : "Unverified"}
+              </p>
+            </td>
+          </tr>
+        );
+      })
+    );
+  }
   return (
     <Card>
       <CardHeader>
@@ -183,29 +209,7 @@ const MapDeliveryList = ({ deliveries, handleToggle, activeID }) => {
       <CardBody>
         <div className="table-full-width table-repsonsive">
           <Table>
-            <tbody>
-              {deliveries &&
-                deliveries.map((delivery) => {
-                  const rowClass = classNames("title", {
-                    "text-primary": activeID === delivery.id,
-                  });
-                  return (
-                    <tr
-                      key={delivery.properties.id}
-                      onClick={() => handleToggle(delivery.properties.id)}
-                    >
-                      <td>
-                        <p className={rowClass}>{delivery.properties.name}</p>
-                        <p className="text-muted">
-                          {delivery.properties.verified
-                            ? "Verified"
-                            : "Unverified"}
-                        </p>
-                      </td>
-                    </tr>
-                  );
-                })}
-            </tbody>
+            <tbody>{renderDeliveries()}</tbody>
           </Table>
         </div>
       </CardBody>

@@ -1,9 +1,10 @@
 import axios from "./CustomAxios";
 const address = "/company";
-const getCompanyRequest = () => axios.get(address);
+
+const getOne = () => axios.get(address);
 
 const CompanyRequests = {
-  getCompanyRequest,
+  getOne,
 };
 
 export default CompanyRequests;

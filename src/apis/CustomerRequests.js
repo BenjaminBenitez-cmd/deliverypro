@@ -1,11 +1,11 @@
-import axios from './CustomAxios';
+import axios from "./CustomAxios";
 
-const address = '/customers';
+const address = "/customers";
 
-const getCustomers = () => axios.get(address);
+const getOne = () => axios.get(address);
 
 const CustomerRequests = {
-    getCustomers
-}
+  getOne,
+};
 
 export default CustomerRequests;

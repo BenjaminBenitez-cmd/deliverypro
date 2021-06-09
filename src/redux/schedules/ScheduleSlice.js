@@ -1,12 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { ScheduleRequests } from "../../apis";
+import { ScheduleRequests, TimeRequests } from "../../apis";
 import { setMessage } from "../notifications/NotificationsSlice";
 
 export const getSchedules = createAsyncThunk(
   "schedule/getSchedule",
   async (_, { rejectWithValue }) => {
     try {
-      const results = await ScheduleRequests.fetchScheduleRequest();
+      const results = await ScheduleRequests.getOne();
       return results.data.data;
     } catch (err) {
       return rejectWithValue([], err);
@@ -18,7 +18,7 @@ export const addTime = createAsyncThunk(
   "schedule/addTime",
   async (values, { rejectWithValue, dispatch }) => {
     try {
-      const results = await ScheduleRequests.addScheduleTime(values);
+      const results = await TimeRequests.postOne(values);
       dispatch(setMessage("Success, added time"));
       return results.data.data.time;
     } catch (err) {
@@ -32,7 +32,7 @@ export const deleteTime = createAsyncThunk(
   "schedule/deleteTime",
   async (id, { rejectWithValue, dispatch }) => {
     try {
-      await ScheduleRequests.deleteTimeRequest(id);
+      await TimeRequests.deleteOne(id);
       dispatch(setMessage("Success, deleted time"));
       return id;
     } catch (err) {

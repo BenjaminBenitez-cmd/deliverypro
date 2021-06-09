@@ -126,7 +126,7 @@ const AccountDetails = ({ information }) => {
   const onSubmit = async (values, { setSubmitting }) => {
     console.log(values);
     try {
-      await UserRequests.updateUser(values);
+      await UserRequests.updateOne(values);
       SetInitialValues((prev) => {
         return {
           ...prev,
@@ -142,7 +142,7 @@ const AccountDetails = ({ information }) => {
   useEffect(() => {
     const fetchCompanyDetails = async () => {
       try {
-        const response = await CompanyRequests.getCompanyRequest();
+        const response = await CompanyRequests.getOne();
         const { location, name } = response.data.data.company;
         SetInitialValues((prev) => {
           return {

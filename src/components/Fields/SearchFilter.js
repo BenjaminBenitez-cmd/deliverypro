@@ -10,14 +10,21 @@ import {
   Row,
 } from "reactstrap";
 import DeliveryAddModal from "components/Modals/DeliveryAddModal";
+import { useSelector } from "react-redux";
 
 const SearchFilter = () => {
-  const { filterItems } = useFilter();
+  const deliveries = useSelector((state) => state.deliveries.deliveries);
   const [search, setSearch] = useState("");
   const [isAddOpen, setIsAddOpen] = useState(false);
 
   const handleToggle = () => {
     setIsAddOpen((prev) => !prev);
+  };
+
+  const searchDeliveryByName = (params) => {
+    return deliveries?.filter((deliveries) =>
+      deliveries.firstname.includes(params.toLowerCase())
+    );
   };
 
   const handleChange = (e) => {

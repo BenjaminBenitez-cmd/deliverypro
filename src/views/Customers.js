@@ -16,7 +16,7 @@ const Customers = () => {
   useEffect(() => {
     const fetchCustomers = async () => {
       try {
-        const response = await CustomerRequests.getCustomers();
+        const response = await CustomerRequests.getOne();
         setCustomer(response.data.data.customers);
       } catch (e) {
         console.log(e);

@@ -34,7 +34,7 @@ const Signin = () => {
 
   const onSubmit = async (values, { setSubmitting }) => {
     try {
-      const response = await AuthRequests.signinUserRequest(values);
+      const response = await AuthRequests.signin(values);
       setUserToLocalStorage(response.data.data);
       dispatch(authenticate());
       history.push("/admin/dashboard");

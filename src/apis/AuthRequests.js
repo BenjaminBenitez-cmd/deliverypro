@@ -1,13 +1,13 @@
-import axios from 'axios';
+import axios from "axios";
 
 const axiosInstance = axios.create({
-    baseURL: process.env.REACT_APP_API,
+  baseURL: process.env.REACT_APP_API,
 });
 
-const signinUserRequest = (values) => axiosInstance.post('/signin', values);
+const signin = (values) => axiosInstance.post("/signin", values);
 
 const AuthRequests = {
-    signinUserRequest
-}
+  signin,
+};
 
 export default AuthRequests;

@@ -1,11 +1,11 @@
-import axios from './CustomAxios';
+import axios from "./CustomAxios";
 
-const address = '/drivers';
+const address = "/drivers";
 
-const fetchDrivers = () => axios.get(address);
+const getOne = () => axios.get(address);
 
 const DriverRequests = {
-    fetchDrivers
-}
+  getOne,
+};
 
 export default DriverRequests;

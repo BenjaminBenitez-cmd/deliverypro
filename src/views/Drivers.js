@@ -25,7 +25,7 @@ export default function Drivers() {
   useEffect(() => {
     const getDrivers = async () => {
       try {
-        const response = await DriverRequests.fetchDrivers();
+        const response = await DriverRequests.getOne();
         setDrivers(response.data.data.drivers);
       } catch (err) {
         setDrivers([]);
@@ -33,6 +33,7 @@ export default function Drivers() {
     };
     getDrivers();
   }, []);
+
   return (
     <>
       <Formik

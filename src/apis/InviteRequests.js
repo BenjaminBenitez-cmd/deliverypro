@@ -1,14 +1,14 @@
-import axios from './CustomAxios';
+import axios from "./CustomAxios";
 
-const address = '/invites';
+const address = "/invites";
 
-const fetchInvites = () => axios.get(address);
+const getOne = () => axios.get(address);
 
-const addInvite = (values) =>  axios.post(address, values);
+const postOne = (values) => axios.post(address, values);
 
 const InviteRequests = {
-    fetchInvites,
-    addInvite
-}
+  getOne,
+  postOne,
+};
 
 export default InviteRequests;

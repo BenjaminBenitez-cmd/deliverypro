@@ -6,7 +6,7 @@ export const getDeliveries = createAsyncThunk(
   "deliveries/getdeliveries",
   async (_, { rejectWithValue }) => {
     try {
-      const results = await DeliveryRequests.fetchDeliveriesRequest();
+      const results = await DeliveryRequests.getMany();
       return results.data.data.deliveries;
     } catch (err) {
       return rejectWithValue([], err);
@@ -18,7 +18,7 @@ export const addDelivery = createAsyncThunk(
   "deliveries/addDelivery",
   async (values, { rejectWithValue, dispatch }) => {
     try {
-      const results = await DeliveryRequests.postDeliveryRequest(values);
+      const results = await DeliveryRequests.postOne(values);
       dispatch(setMessage("Success, added delivery"));
       return results.data.data.delivery;
     } catch (err) {
@@ -32,7 +32,7 @@ export const toggleDelivery = createAsyncThunk(
   "deliveries/toggleDelivery",
   async (index, { rejectWithValue, dispatch }) => {
     try {
-      const response = await DeliveryRequests.toggleDeliveryRequest(index);
+      const response = await DeliveryRequests.toggleOne(index);
       dispatch(setMessage("Toggled fullfillment status"));
       return response.data.data.delivery;
     } catch (err) {
@@ -47,7 +47,7 @@ export const updateDelivery = createAsyncThunk(
   async (values, { rejectWithValue, dispatch }) => {
     try {
       const { id, body } = values;
-      await DeliveryRequests.updateDeliveryRequest(id, body);
+      await DeliveryRequests.updateOne(id, body);
       dispatch(setMessage("Updated delivery!"));
       return { id, body };
     } catch (err) {
