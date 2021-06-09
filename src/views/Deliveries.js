@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import { Row, Col } from "reactstrap";
 
 import SearchFilter from "components/Fields/SearchFilter";
-import DeliveryTable from "components/Tables.js/DeliveryTable";
+import DeliveryTable from "components/Tables/DeliveryTable";
 import { useDispatch, useSelector } from "react-redux";
 import { getDeliveries } from "redux/deliveries/DeliverySlice";
 
