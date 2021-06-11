@@ -124,7 +124,6 @@ const AccountDetails = ({ information }) => {
   });
 
   const onSubmit = async (values, { setSubmitting }) => {
-    console.log(values);
     try {
       await UserRequests.updateOne(values);
       SetInitialValues((prev) => {
@@ -134,7 +133,7 @@ const AccountDetails = ({ information }) => {
         };
       });
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
     setSubmitting(false);
   };

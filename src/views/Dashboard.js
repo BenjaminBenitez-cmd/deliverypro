@@ -56,12 +56,11 @@ function Dashboard(props) {
   const setBgChartData = (name) => {
     setbigChartData(name);
   };
-  console.log(deliveries);
 
   useEffect(() => {
     dispatch(getSchedules());
     dispatch(getDeliveries());
-  }, []);
+  }, [dispatch]);
 
   return (
     <>

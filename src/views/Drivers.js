@@ -20,7 +20,7 @@ import { DriverRequests } from "../apis";
 
 export default function Drivers() {
   const notificationAlertRef = React.useRef(null);
-  const [drivers, setDrivers] = useState(null);
+  const [drivers, setDrivers] = useState([]);
 
   useEffect(() => {
     const getDrivers = async () => {
@@ -33,6 +33,29 @@ export default function Drivers() {
     };
     getDrivers();
   }, []);
+
+  const TableRow = ({ id, name, phone, email }) => (
+    <tr key={id}>
+      <td>{name}</td>
+      <td>{phone}</td>
+      <td>{email}</td>
+    </tr>
+  );
+
+  const InnerTable = () => (
+    <Table className="tablesorter" responsive>
+      <thead className="text-primary">
+        <tr>
+          <th>Name</th>
+          <th>Phone Number</th>
+          <th>Email</th>
+        </tr>
+      </thead>
+      <tbody>
+        {drivers && drivers.map((driver) => <TableRow {...driver} />)}
+      </tbody>
+    </Table>
+  );
 
   return (
     <>
@@ -61,25 +84,13 @@ export default function Drivers() {
                   <CardTitle tag="h4">Drivers</CardTitle>
                 </CardHeader>
                 <CardBody>
-                  <Table className="tablesorter" responsive>
-                    <thead className="text-primary">
-                      <tr>
-                        <th>Name</th>
-                        <th>Phone Number</th>
-                        <th>Email</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {drivers &&
-                        drivers.map((driver) => (
-                          <tr key={driver.id}>
-                            <td>{driver.name}</td>
-                            <td>{driver.phone}</td>
-                            <td>{driver.email}</td>
-                          </tr>
-                        ))}
-                    </tbody>
-                  </Table>
+                  {drivers.length > 0 ? (
+                    <InnerTable />
+                  ) : (
+                    <p className="h5 text-body">
+                      Whats holding you back add some drivers 🔥
+                    </p>
+                  )}
                 </CardBody>
               </Card>
             </Col>

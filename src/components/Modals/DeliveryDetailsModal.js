@@ -1,4 +1,3 @@
-import Map from "components/Maps/Map";
 import { useState } from "react";
 import { Button, Col, Modal, ModalBody, ModalFooter, Row } from "reactstrap";
 import DeliveryEditModal from "./DeliveryEditModal";

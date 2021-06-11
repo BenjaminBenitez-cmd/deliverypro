@@ -19,7 +19,7 @@ export const addDelivery = createAsyncThunk(
   async (values, { rejectWithValue, dispatch }) => {
     try {
       const results = await DeliveryRequests.postOne(values);
-      dispatch(setMessage("Success, added delivery"));
+      dispatch(setMessage("Successfully added delivery"));
       return results.data.data.delivery;
     } catch (err) {
       dispatch(setMessage("Error, unable to add delivery"));
@@ -57,14 +57,28 @@ export const updateDelivery = createAsyncThunk(
   }
 );
 
+export const deleteDelivery = createAsyncThunk(
+  "deliveries/deleteDelivery",
+  async (id, { rejectWithValue, dispatch }) => {
+    try {
+      await DeliveryRequests.deleteOne(id);
+      dispatch(setMessage("Deleted delivery"));
+      return id;
+    } catch (err) {
+      dispatch(setMessage("Unable to change delivery status"));
+      return rejectWithValue([], err);
+    }
+  }
+);
+
 export const deliverySlice = createSlice({
   name: "deliveries",
   initialState: {
     status: "",
     deliveries: [],
     filter: {
-      value: "false",
-      column: "delivery_status",
+      value: false,
+      data: "delivery_status",
     },
   },
   reducers: {
@@ -118,6 +132,16 @@ export const deliverySlice = createSlice({
           coordinates: [body.longitude, body.latitude],
         },
       };
+    },
+    [deleteDelivery.fulfilled]: (state, action) => {
+      state.status = "success";
+      const id = action.payload;
+
+      const index = state.deliveries.findIndex(
+        (delivery) => delivery.id === id
+      );
+
+      state.deliveries.splice(index, 1);
     },
   },
 });

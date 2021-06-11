@@ -33,29 +33,13 @@ import {
   Button,
 } from "reactstrap";
 import { AddressRequests } from "apis";
-import classNames from "classnames";
 
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_API;
 
 function Map() {
-  const mapContainer = useRef(null);
-  const map = useRef(null);
-
-  const [lng, setLng] = useState(-88.56177);
-  const [lat, setLat] = useState(18.077686);
-  const [zoom, setZoom] = useState(13);
-  const [toggle, setToggle] = useState(undefined);
   const [geoJSON, setGeoJSON] = useState(null);
-
+  const [toggle, setToggle] = useState(undefined);
   const handleToggle = (num) => setToggle(num);
-
-  const flyToStore = (currentFeature) => {
-    if (!map.current) return;
-    map.current.flyTo({
-      center: currentFeature.geometry.coordinates,
-      zoom: 15,
-    });
-  };
 
   const fetchGeoJSON = async () => {
     try {
@@ -64,6 +48,71 @@ function Map() {
     } catch (error) {
       console.error(error);
     }
+  };
+
+  useEffect(() => {
+    fetchGeoJSON();
+  }, []);
+
+  if (geoJSON?.features === null) {
+    return (
+      <div className="content d-flex justify-content-center align-items-center">
+        <p className="h5 text-white">No deliveries found add some :)</p>
+      </div>
+    );
+  }
+
+  return (
+    <>
+      <div className="content">
+        <Row>
+          <Col md="12">
+            <Card className="card-plain">
+              <CardHeader>Delivery Map</CardHeader>
+              <CardBody>
+                <Row>
+                  <Col sm={3}>
+                    {geoJSON && (
+                      <MapDeliveryList
+                        deliveries={geoJSON.features}
+                        handleToggle={handleToggle}
+                        activeID={toggle}
+                      />
+                    )}
+                  </Col>
+                  <Col sm={9}>
+                    <InnerMap
+                      geoJSON={geoJSON}
+                      toggle={toggle}
+                      handleToggle={handleToggle}
+                    />
+                  </Col>
+                </Row>
+              </CardBody>
+            </Card>
+          </Col>
+        </Row>
+      </div>
+    </>
+  );
+}
+
+//Map with points
+
+const InnerMap = ({ geoJSON, toggle, handleToggle }) => {
+  const mapContainer = useRef(null);
+  const map = useRef(null);
+
+  const [lng, setLng] = useState(-88.56177);
+  const [lat, setLat] = useState(18.077686);
+  const [zoom, setZoom] = useState(13);
+
+  const flyToStore = (currentFeature) => {
+    if (!map.current) return;
+    map.current.flyTo({
+      center: currentFeature.geometry.coordinates,
+      zoom: 15,
+    });
   };
 
   function createPopUp(currentFeature) {
@@ -81,10 +130,6 @@ function Map() {
       )
       .addTo(map.current);
   }
-
-  useEffect(() => {
-    fetchGeoJSON();
-  }, []);
 
   useEffect(() => {
     if (!toggle) return;
@@ -105,7 +150,6 @@ function Map() {
       center: [lng, lat],
       zoom: zoom,
     });
-    fetchGeoJSON();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -137,81 +181,45 @@ function Map() {
   }, []);
 
   return (
-    <>
-      <div className="content">
-        <Row>
-          <Col md="12">
-            <Card className="card-plain">
-              <CardHeader>Delivery Map</CardHeader>
-              <CardBody>
-                <Row>
-                  <Col sm={3}>
-                    {geoJSON && (
-                      <MapDeliveryList
-                        deliveries={geoJSON.features}
-                        handleToggle={handleToggle}
-                        activeID={toggle}
-                      />
-                    )}
-                  </Col>
-                  <Col sm={9}>
-                    <Card>
-                      <div>
-                        <div className="sidebarStyle">
-                          Longitude: {lng} | Latitude: {lat} | Zoom: {zoom}
-                        </div>
-                      </div>
-                      <div ref={mapContainer} className="mapContainer tall" />
-                    </Card>
-                  </Col>
-                </Row>
-              </CardBody>
-            </Card>
-          </Col>
-        </Row>
+    <Card>
+      <div>
+        <div className="sidebarStyle">
+          Longitude: {lng} | Latitude: {lat} | Zoom: {zoom}
+        </div>
       </div>
-    </>
+      <div ref={mapContainer} className="mapContainer tall" />
+    </Card>
   );
-}
+};
+
+//The side map with list of deliveries
 
 const MapDeliveryList = ({ deliveries, handleToggle, activeID }) => {
-  function renderDeliveries() {
-    return (
-      deliveries &&
-      deliveries.map((delivery) => {
-        return (
-          <tr
-            key={delivery.properties.id}
-            onClick={() => handleToggle(delivery.properties.id)}
-          >
-            <td>
-              <Button
-                className="btn btn-link pl-0"
-                color="primary"
-                role="button"
-              >
-                {delivery.properties.name}
-              </Button>
-              <p className="text-muted">
-                {delivery.properties.verified ? "Verified" : "Unverified"}
-              </p>
-            </td>
-          </tr>
-        );
-      })
-    );
-  }
+  const TableRow = ({ handleToggle, properties }) => (
+    <tr key={properties.id} onClick={() => handleToggle(properties.id)}>
+      <td>
+        <Button className="btn btn-link pl-0" color="primary" role="button">
+          {properties.name}
+        </Button>
+        <p className="text-muted">
+          {properties.verified ? "Verified" : "Unverified"}
+        </p>
+      </td>
+    </tr>
+  );
+
   return (
     <Card>
       <CardHeader>
         <CardTitle tag="h5">Deliveries</CardTitle>
       </CardHeader>
       <CardBody>
-        <div className="table-full-width table-repsonsive">
-          <Table>
-            <tbody>{renderDeliveries()}</tbody>
-          </Table>
-        </div>
+        <Table className="table-sorter" striped>
+          {deliveries &&
+            deliveries.map((delivery) => (
+              <TableRow handleToggle={handleToggle} {...delivery} />
+            ))}
+        </Table>
       </CardBody>
       <CardFooter>
         <Button color="primary">Generate</Button>

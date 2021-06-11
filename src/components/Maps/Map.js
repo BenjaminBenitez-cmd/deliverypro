@@ -16,7 +16,7 @@
 
 */
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 // eslint-disable-next-line import/no-webpack-loader-syntax
 import mapboxgl from "!mapbox-gl";
 import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
@@ -95,7 +95,6 @@ function Map({
       geocoder.on("result", function (e) {
         map.current.getSource("single-point").setData(e.result.geometry);
         const temp = e.result;
-        console.log(e);
         updateLocation({
           longitude: temp.center[0],
           latitude: temp.center[1],

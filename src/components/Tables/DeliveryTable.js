@@ -58,6 +58,7 @@ const DeliveryTable = ({ deliveries, status }) => {
 
   const handleDeleteDelivery = (id, e) => {
     dispatch(deleteDelivery(id));
+    e.stopPropagation();
   };
 
   //if loading display an indicator
@@ -77,59 +78,63 @@ const DeliveryTable = ({ deliveries, status }) => {
     );
   }
 
-  const renderDeliveries = () => {
-    return (
-      deliveries &&
-      filterDeliveries().map((node) => (
-        <tr key={node.id}>
-          <td>
-            <FormGroup check>
-              <Label check>
-                <Input
-                  onChange={() => dispatch(toggleDelivery(node.id))}
-                  checked={node.delivery_status}
-                  type="checkbox"
-                />
-                <span className="form-check-sign" />
-              </Label>
-            </FormGroup>
-          </td>
-          <td>{statustoText(node.delivery_status)}</td>
-          <td>
-            {node.first_name} {node.last_name}
-          </td>
-          <td>
-            {deliveryDayToText(node.delivery_day)}{" "}
-            {deliveryTimeToText(node.delivery_time)}
-          </td>
-          <td>
-            <p className="text-muted">{node.phone_number}</p>
-          </td>
-          <td>{node.street}</td>
-          <td>{node.district}</td>
-          <td>
-            <Button
-              type="button"
-              className="btn btn-danger"
-              onClick={(e) => handleDeleteDelivery(node.id, e)}
-            >
-              Delete
-            </Button>
-          </td>
-        </tr>
-      ))
-    );
-  };
+  const TableRow = ({
+    id,
+    delivery_status,
+    first_name,
+    last_name,
+    delivery_day,
+    delivery_time,
+    phone_number,
+    street,
+    district,
+  }) => (
+    <tr key={id} onClick={() => handleToggleOpen(id)}>
+      <td>
+        <FormGroup check>
+          <Label check>
+            <Input
+              onChange={() => dispatch(toggleDelivery(id))}
+              checked={delivery_status}
+              type="checkbox"
+            />
+            <span className="form-check-sign" />
+          </Label>
+        </FormGroup>
+      </td>
+      <td>{statustoText(delivery_status)}</td>
+      <td>
+        {first_name} {last_name}
+      </td>
+      <td>
+        {deliveryDayToText(delivery_day)} {deliveryTimeToText(delivery_time)}
+      </td>
+      <td>
+        <p className="text-muted">{phone_number}</p>
+      </td>
+      <td>{street}</td>
+      <td>{district}</td>
+      <td>
+        <Button
+          type="button"
+          className="btn btn-danger"
+          onClick={(e) => handleDeleteDelivery(id, e)}
+        >
+          Delete
+        </Button>
+      </td>
+    </tr>
+  );
 
   return (
     <>
       <Card className="card-plain">
         <CardHeader>
           <CardTitle tag="h4">Deliveries</CardTitle>
-          <ExcelConverter
+          {/* <ExcelConverter
             csvData={generateDeliveries(deliveries)}
             fileName={"deliveries"}
-          />
+          /> */}
         </CardHeader>
         <CardBody>
           <Table className="tablesorter" responsive striped>
@@ -144,7 +149,12 @@ const DeliveryTable = ({ deliveries, status }) => {
                 <th>District</th>
               </tr>
             </thead>
-            <tbody>{renderDeliveries()}</tbody>
+            <tbody>
+              {deliveries &&
+                filterDeliveries().map((delivery) => (
+                  <TableRow {...delivery} />
+                ))}
+            </tbody>
           </Table>
         </CardBody>
       </Card>

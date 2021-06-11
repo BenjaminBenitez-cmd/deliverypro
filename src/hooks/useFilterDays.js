@@ -10,8 +10,9 @@ const useFilterDays = () => {
   const distpatch = useDispatch();
 
   const deliveryDayToText = (id) => {
-    let { name } = schedule.dates.find((day) => day.id === id.toString());
-    return name;
+    let day = schedule.dates.find((day) => day.id === id.toString());
+    if (day === undefined) return "Not found";
+    return day.name;
   };
 
   const deliveryUniqueDays = () => {
@@ -31,6 +32,7 @@ const useFilterDays = () => {
   };
 
   const deliveryTimeToText = (id) => {
+    if (!id) return "no ID provided";
     let { time_start, time_end } = schedule.days.find(
       (time) => time.id === id.toString()
     );

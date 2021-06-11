@@ -13,8 +13,9 @@ import {
 } from "reactstrap";
 import { addDelivery } from "redux/deliveries/DeliverySlice";
 import { useDispatch, useSelector } from "react-redux";
+import { getNextDay } from "utilities/utilities";
 
-const DeliveryAddModal = ({ isOpen, toggleModal, information }) => {
+const DeliveryAddModal = ({ isOpen, toggleModal }) => {
   const days = useSelector((state) => state.schedule.days);
   const dispatch = useDispatch();
 
@@ -28,7 +29,7 @@ const DeliveryAddModal = ({ isOpen, toggleModal, information }) => {
     phone_number: "",
     street: "",
     district: "",
-    delivery_date: "",
+    delivery_day: "",
     delivery_time: "",
   };
 
@@ -40,7 +41,9 @@ const DeliveryAddModal = ({ isOpen, toggleModal, information }) => {
       .max(20, "Must be less than 20 characters")
       .required("Required"),
     email: Yup.string().email("Invalid Email").required("Required"),
-    phone_number: Yup.string().matches(phoneRegExp, "Invalid Phone Number"),
+    phone_number: Yup.string()
+      .matches(phoneRegExp, "Invalid Phone Number")
+      .required("Required"),
     street: Yup.string()
       .max(40, "Must be less than 40 characters")
       .required("Required"),
@@ -50,8 +53,16 @@ const DeliveryAddModal = ({ isOpen, toggleModal, information }) => {
     delivery_time: Yup.number().required("Required"),
   });
 
+  console.log(initialValues);
+
   const onSubmit = async (values, { setSubmitting }) => {
-    dispatch(addDelivery(values));
+    //Calculate the next delivery date using the delivery_day
+    let newValues = {
+      ...values,
+      delivery_date: getNextDay(values.delivery_day),
+    };
+    dispatch(addDelivery(newValues));
+    alert(JSON.stringify(newValues));
     setSubmitting(false);
     toggleModal();
   };
@@ -86,9 +97,11 @@ const DeliveryAddModal = ({ isOpen, toggleModal, information }) => {
           size="lg"
           style={{ marginTop: "-105px" }}
         >
+          {console.log(values)}
+
           <div className="modal-header mb-3">
             <h2 className="modal-title" id="exampleModalLabel">
-              {information.first_name} {information.last_name}
+              Add a delivery
             </h2>
             <button
               type="button"

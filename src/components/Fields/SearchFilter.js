@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useFilter } from "hooks/useFilter";
 import {
   Card,
   CardBody,
@@ -10,26 +9,26 @@ import {
   Row,
 } from "reactstrap";
 import DeliveryAddModal from "components/Modals/DeliveryAddModal";
-import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { filterDeliveries } from "redux/deliveries/DeliverySlice";
 
 const SearchFilter = () => {
-  const deliveries = useSelector((state) => state.deliveries.deliveries);
+  const dispatch = useDispatch();
+  const [selectAll, setSelectAll] = useState(false);
   const [search, setSearch] = useState("");
   const [isAddOpen, setIsAddOpen] = useState(false);
+
+  const toggleSelectAll = () => {
+    setSelectAll(!selectAll);
+  };
 
   const handleToggle = () => {
     setIsAddOpen((prev) => !prev);
   };
 
-  const searchDeliveryByName = (params) => {
-    return deliveries?.filter((deliveries) =>
-      deliveries.firstname.includes(params.toLowerCase())
-    );
-  };
-
   const handleChange = (e) => {
     setSearch(e.target.value);
-    filterItems(e);
+    dispatch(filterDeliveries({ value: e.target.value, data: "first_name" }));
   };
 
   return (
@@ -56,23 +55,23 @@ const SearchFilter = () => {
           />
         </CardBody>
         <CardFooter>
-          <Button color="primary" className="btn-simple">
-            Select All
+          <Button
+            color="primary"
+            className="btn-simple"
+            onClick={toggleSelectAll}
+          >
+            {selectAll ? "Deselect" : "Select All"}
           </Button>
-          <Button color="primary" className="btn-simple" disabled>
+          <Button color="primary" className="btn-simple" disabled={!selectAll}>
             Delete
           </Button>
-          <Button color="primary" className="btn-simple" disabled>
+          <Button color="primary" className="btn-simple" disabled={!selectAll}>
             Archive
           </Button>
         </CardFooter>
       </Card>
       {isAddOpen && (
-        <DeliveryAddModal
-          isOpen={isAddOpen}
-          toggleModal={handleToggle}
-          information={{ hello: "hello" }}
-        />
+        <DeliveryAddModal isOpen={isAddOpen} toggleModal={handleToggle} />
       )}
     </>
   );

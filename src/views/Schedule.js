@@ -14,10 +14,11 @@ import ScheduleContainer from "components/Schedule/ScheduleContainer";
 const Schedule = () => {
   const dispatch = useDispatch(getSchedules);
   const { dates, days, id, status } = useSelector((state) => state.schedule);
-  console.log(days);
+
   useEffect(() => {
     dispatch(getSchedules());
   }, [dispatch]);
+
   return (
     <div className="content">
       <Card className="card-plain">

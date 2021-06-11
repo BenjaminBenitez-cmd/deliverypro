@@ -19,11 +19,21 @@ const Customers = () => {
         const response = await CustomerRequests.getOne();
         setCustomer(response.data.data.customers);
       } catch (e) {
-        console.log(e);
+        console.error(e);
       }
     };
     fetchCustomers();
   }, []);
+
+  if (customers.length <= 0) {
+    return (
+      <div className="content d-flex justify-content-center align-items-center">
+        <div className="h5 text-white">
+          No customers, create your first delivery to view
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="content">
@@ -31,7 +41,7 @@ const Customers = () => {
         <Col sm={12}>
           <Card className="card-plain">
             <CardHeader>
-              <CardTitle tag="h4">Deliveries</CardTitle>
+              <CardTitle tag="h4">Customers</CardTitle>
             </CardHeader>
             <CardBody>
               <Table className="tablesorter" responsive>

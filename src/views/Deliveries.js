@@ -13,7 +13,7 @@ export default function Deliveries() {
 
   useEffect(() => {
     dispatch(getDeliveries());
-  }, []);
+  }, [dispatch]);
   return (
     <>
       <div className="content">

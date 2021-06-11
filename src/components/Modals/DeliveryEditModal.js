@@ -34,7 +34,7 @@ const DeliveryEditModal = ({ isOpen, toggleModal, information }) => {
     longitude: information.geolocation.coordinates[0],
     latitude: information.geolocation.coordinates[1],
   });
-  const values = {
+  const initialValues = {
     first_name: information.first_name,
     last_name: information.last_name,
     email: information.email,
@@ -43,7 +43,6 @@ const DeliveryEditModal = ({ isOpen, toggleModal, information }) => {
     delivery_day: information.delivery_day,
     delivery_time: information.delivery_time,
   };
-  const [initialValues, setInitialValues] = useState(values);
 
   const updateLocation = (location) => {
     setLocation((prev) => {
@@ -213,8 +212,11 @@ const DeliveryEditModal = ({ isOpen, toggleModal, information }) => {
                 )}
               </ModalBody>
               <ModalFooter className="p-3">
-                <Button color="secondary" onClick={toggleModal}>
-                  Close
+                <Button
+                  color="secondary"
+                  onClick={step === 2 ? stepDown : toggleModal}
+                >
+                  {step === 2 ? "Go back" : "Close"}
                 </Button>
                 {step === 1 && (
                   <Button

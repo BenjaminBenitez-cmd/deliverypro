@@ -10,6 +10,7 @@ const ScheduleContainer = ({ dates, days, id, status }) => {
   } else if (status === "failed") {
     return <div>An Error occurred, report to developer</div>;
   }
+
   return (
     <Container fluid className="p-0">
       <Row>
@@ -28,7 +29,7 @@ const ScheduleContainer = ({ dates, days, id, status }) => {
                       days.map((time) => {
                         return (
                           time.name_of_day_id.toString() === date.id && (
-                            <TimeCard key={time.id} {...time} />
+                            <TimeCard {...time} />
                           )
                         );
                       })}
