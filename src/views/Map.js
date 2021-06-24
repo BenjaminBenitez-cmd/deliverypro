@@ -215,10 +215,16 @@ const MapDeliveryList = ({ deliveries, handleToggle, activeID }) => {
       </CardHeader>
       <CardBody>
         <Table className="table-sorter" striped>
-          {deliveries &&
-            deliveries.map((delivery) => (
-              <TableRow handleToggle={handleToggle} {...delivery} />
-            ))}
+          <tbody>
+            {deliveries &&
+              deliveries.map((delivery) => (
+                <TableRow
+                  key={delivery.id}
+                  handleToggle={handleToggle}
+                  {...delivery}
+                />
+              ))}
+          </tbody>
         </Table>
       </CardBody>
       <CardFooter>

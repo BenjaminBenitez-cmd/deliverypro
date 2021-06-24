@@ -26,10 +26,10 @@ const ScheduleContainer = ({ dates, days, id, status }) => {
                   </Row>
                   <Row>
                     {days &&
-                      days.map((time) => {
+                      days.map((time, index) => {
                         return (
                           time.name_of_day_id.toString() === date.id && (
-                            <TimeCard {...time} />
+                            <TimeCard key={index} {...time} />
                           )
                         );
                       })}

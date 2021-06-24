@@ -20,7 +20,7 @@ var ps;
 
 function Admin(props) {
   const notificationAlertRef = React.useRef(null);
-  const { message } = useSelector((state) => state.notification);
+  const { messages } = useSelector((state) => state.notification);
 
   const notify = (place, message) => {
     var color = Math.floor(Math.random() * 5 + 1);
@@ -128,10 +128,10 @@ function Admin(props) {
   };
 
   React.useEffect(() => {
-    if (message) {
-      notify("br", message);
+    if (messages.length > 0) {
+      notify("br", messages[messages.length - 1]);
     }
-  }, [message]);
+  }, [messages]);
 
   return (
     <BackgroundColorContext.Consumer>

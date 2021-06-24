@@ -74,7 +74,8 @@ export const deleteDelivery = createAsyncThunk(
 export const deliverySlice = createSlice({
   name: "deliveries",
   initialState: {
-    status: "",
+    error: "",
+    loading: true,
     deliveries: [],
     filter: {
       value: false,
@@ -88,26 +89,29 @@ export const deliverySlice = createSlice({
   },
   extraReducers: {
     [getDeliveries.pending]: (state) => {
-      state.status = "loading";
+      state.loading = true;
     },
     [getDeliveries.fulfilled]: (state, action) => {
       state.deliveries = action.payload;
-      state.status = "success";
+      state.loading = false;
     },
     [getDeliveries.rejected]: (state) => {
-      state.status = "failed";
+      state.loading = false;
+      state.error = "An error occured";
     },
     [addDelivery.pending]: (state) => {
-      state.status = "loading";
+      state.loading = true;
     },
     [addDelivery.fulfilled]: (state, action) => {
+      state.loading = false;
       state.deliveries.push(action.payload);
-      state.status = "success";
     },
     [addDelivery.rejected]: (state) => {
-      state.status = "failed";
+      state.loading = false;
+      state.error = "An error occured";
     },
     [toggleDelivery.fulfilled]: (state, action) => {
+      state.loading = false;
       const { id, delivery_status } = action.payload;
       const index = state.deliveries.findIndex(
         (delivery) => delivery.id === id
@@ -116,10 +120,9 @@ export const deliverySlice = createSlice({
         return state;
       }
       state.deliveries[index].delivery_status = delivery_status;
-      state.status = "success";
     },
     [updateDelivery.fulfilled]: (state, action) => {
-      state.status = "success";
+      state.loading = false;
       const { id, body } = action.payload;
       const index = state.deliveries.findIndex(
         (delivery) => delivery.id === id
@@ -134,7 +137,7 @@ export const deliverySlice = createSlice({
       };
     },
     [deleteDelivery.fulfilled]: (state, action) => {
-      state.status = "success";
+      state.loading = false;
       const id = action.payload;
 
       const index = state.deliveries.findIndex(

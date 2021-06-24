@@ -1,26 +1,18 @@
 import React, { useState } from "react";
-import {
-  Card,
-  CardBody,
-  CardFooter,
-  CardHeader,
-  Input,
-  Button,
-  Row,
-} from "reactstrap";
+import { Card, CardBody, CardHeader, Input, Button, Row } from "reactstrap";
 import DeliveryAddModal from "components/Modals/DeliveryAddModal";
 import { useDispatch } from "react-redux";
 import { filterDeliveries } from "redux/deliveries/DeliverySlice";
 
 const SearchFilter = () => {
   const dispatch = useDispatch();
-  const [selectAll, setSelectAll] = useState(false);
+  // const [selectAll, setSelectAll] = useState(false);
   const [search, setSearch] = useState("");
   const [isAddOpen, setIsAddOpen] = useState(false);
 
-  const toggleSelectAll = () => {
-    setSelectAll(!selectAll);
-  };
+  // const toggleSelectAll = () => {
+  //   setSelectAll(!selectAll);
+  // };
 
   const handleToggle = () => {
     setIsAddOpen((prev) => !prev);
@@ -54,7 +46,7 @@ const SearchFilter = () => {
             placeholder="Search"
           />
         </CardBody>
-        <CardFooter>
+        {/* <CardFooter>
           <Button
             color="primary"
             className="btn-simple"
@@ -68,7 +60,7 @@ const SearchFilter = () => {
           <Button color="primary" className="btn-simple" disabled={!selectAll}>
             Archive
           </Button>
-        </CardFooter>
+        </CardFooter> */}
       </Card>
       {isAddOpen && (
         <DeliveryAddModal isOpen={isAddOpen} toggleModal={handleToggle} />

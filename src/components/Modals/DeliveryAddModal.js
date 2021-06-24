@@ -53,8 +53,6 @@ const DeliveryAddModal = ({ isOpen, toggleModal }) => {
     delivery_time: Yup.number().required("Required"),
   });
 
-  console.log(initialValues);
-
   const onSubmit = async (values, { setSubmitting }) => {
     //Calculate the next delivery date using the delivery_day
     let newValues = {
@@ -62,7 +60,6 @@ const DeliveryAddModal = ({ isOpen, toggleModal }) => {
       delivery_date: getNextDay(values.delivery_day),
     };
     dispatch(addDelivery(newValues));
-    alert(JSON.stringify(newValues));
     setSubmitting(false);
     toggleModal();
   };
@@ -97,8 +94,6 @@ const DeliveryAddModal = ({ isOpen, toggleModal }) => {
           size="lg"
           style={{ marginTop: "-105px" }}
         >
-          {console.log(values)}
-
           <div className="modal-header mb-3">
             <h2 className="modal-title" id="exampleModalLabel">
               Add a delivery

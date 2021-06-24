@@ -8,10 +8,14 @@ export const getOneById = (id) => axios.get(`${address}/${id}`);
 
 export const postOne = (values) => axios.post(`/schedules/time`, values);
 
-const ScheduleRequests = {
+export const updateOne = (id, values) =>
+  axios.put(`/schedules/time/${id}`, values);
+
+const TimeRequests = {
   deleteOne,
   getOneById,
   postOne,
+  updateOne,
 };
 
-export default ScheduleRequests;
+export default TimeRequests;

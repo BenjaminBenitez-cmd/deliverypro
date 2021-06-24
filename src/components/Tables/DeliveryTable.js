@@ -9,6 +9,8 @@ import {
   Input,
   Label,
   Button,
+  Col,
+  Row,
 } from "reactstrap";
 import { statustoText } from "../../utilities/utilities";
 import { useDispatch, useSelector } from "react-redux";
@@ -85,11 +87,10 @@ const DeliveryTable = ({ deliveries, status }) => {
     last_name,
     delivery_day,
     delivery_time,
-    phone_number,
     street,
     district,
   }) => (
-    <tr key={id} onClick={() => handleToggleOpen(id)}>
+    <tr key={id} onDoubleClick={() => handleToggleOpen(id)}>
       <td>
         <FormGroup check>
           <Label check>
@@ -109,19 +110,30 @@ const DeliveryTable = ({ deliveries, status }) => {
       <td>
         {deliveryDayToText(delivery_day)} {deliveryTimeToText(delivery_time)}
       </td>
-      <td>
-        <p className="text-muted">{phone_number}</p>
-      </td>
-      <td>{street}</td>
       <td>{district}</td>
       <td>
-        <Button
-          type="button"
-          className="btn btn-danger"
-          onClick={(e) => handleDeleteDelivery(id, e)}
-        >
-          Delete
-        </Button>
+        <Row>
+          <Col sm={5} className="mr-3">
+            <Button
+              color="danger"
+              className="btn-simple"
+              size="sm"
+              onClick={(e) => handleDeleteDelivery(id, e)}
+            >
+              Delete
+            </Button>
+          </Col>
+          <Col sm={5}>
+            <Button
+              color="primary"
+              className="btn-simple"
+              size="sm"
+              onClick={() => handleToggleOpen(id)}
+            >
+              Edit
+            </Button>
+          </Col>
+        </Row>
       </td>
     </tr>
   );
@@ -131,10 +143,10 @@ const DeliveryTable = ({ deliveries, status }) => {
       <Card className="card-plain">
         <CardHeader>
           <CardTitle tag="h4">Deliveries</CardTitle>
-          {/* <ExcelConverter
+          <ExcelConverter
             csvData={generateDeliveries(deliveries)}
             fileName={"deliveries"}
-          /> */}
+          />
         </CardHeader>
         <CardBody>
           <Table className="tablesorter" responsive striped>
@@ -142,11 +154,10 @@ const DeliveryTable = ({ deliveries, status }) => {
               <tr>
                 <th>Fullfilled</th>
                 <th>Delivery Status</th>
-                <th>Name</th>
+                <th>Client Name</th>
                 <th>Delivery On</th>
-                <th>Phone Number</th>
-                <th>Street</th>
                 <th>District</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>

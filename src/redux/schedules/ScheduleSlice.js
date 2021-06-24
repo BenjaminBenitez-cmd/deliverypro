@@ -42,6 +42,21 @@ export const deleteTime = createAsyncThunk(
   }
 );
 
+export const updateTime = createAsyncThunk(
+  "schedule/updatetime",
+  async (values, { rejectWithValue, dispatch }) => {
+    try {
+      const { id, body } = values;
+      await TimeRequests.updateOne(id, body);
+      dispatch(setMessage("Successfully updated time"));
+      return { id, body };
+    } catch (err) {
+      dispatch(setMessage("Error updating time"));
+      return rejectWithValue([], err);
+    }
+  }
+);
+
 export const scheduleSlice = createSlice({
   name: "schedule",
   initialState: {
@@ -74,6 +89,15 @@ export const scheduleSlice = createSlice({
       const index = state.days.findIndex((day) => day.id === action.payload);
       state.days.splice(index, 1);
       state.status = "success";
+    },
+    [updateTime.fulfilled]: (state, action) => {
+      if (!action.payload.id || !action.payload.body) {
+        return state;
+      }
+      const { id, body } = action.payload;
+
+      const index = state.days.findIndex((day) => day.id === id);
+      state.days[index] = { ...state.days[index], ...body };
     },
   },
 });
