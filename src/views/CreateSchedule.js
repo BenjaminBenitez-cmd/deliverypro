@@ -1,5 +1,5 @@
 import { getSchedules } from "redux/schedules/ScheduleSlice";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import {
   Card,
@@ -10,7 +10,11 @@ import {
   Row,
   Table,
   Button,
+  CustomInput,
 } from "reactstrap";
+import { ScheduleRequests } from "apis";
+import ScheduleAddModal from "components/Modals/ScheduleAdd";
+import { Link, useHistory } from "react-router-dom";
 
 const data = [
   {
@@ -31,47 +35,86 @@ const data = [
 ];
 
 const CreateSchedule = () => {
-  const dispatch = useDispatch(getSchedules);
+  const history = useHistory();
+  const [schedules, setSchedules] = useState(null);
+  const [isOpen, setIsOpen] = useState(false);
+
+  //create toggle for modal
+  const toggleModal = () => setIsOpen(!isOpen);
+
+  //fetch schedules
+  const fetchSchedules = async () => {
+    try {
+      const response = await ScheduleRequests.getMany();
+      setSchedules(response.data.data.schedules);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  //redirect to editable window
+  const redirect = (id) => {
+    history.push(`/admin/schedule/${id}`);
+  };
 
   useEffect(() => {
-    dispatch(getSchedules());
-  }, [dispatch]);
+    fetchSchedules();
+  }, []);
 
   return (
-    <div className="content">
-      <Card className="card-plain">
-        <CardHeader className="pl-0">
-          <CardTitle tag="h4">Schedule</CardTitle>
-        </CardHeader>
-        <CardBody>
-          <Container fluid className="p-0">
-            <Row className="mb-3">
-              <Button color="primary" className="btn btn-primary btn-simple">
-                Add
-              </Button>
-            </Row>
-            <Row>
-              <Table className="tablesorter" responsive striped>
-                <thead className="text-primary animation-on-hover">
-                  <tr>
-                    <th>Name</th>
-                    <th>Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {data.map((schedule) => (
-                    <tr key={schedule.id}>
-                      <td>{schedule.name}</td>
-                      <td>{schedule.active ? "Active" : "Not Active"}</td>
+    <>
+      <div className="content">
+        <Card className="card-plain">
+          <CardHeader className="pl-0">
+            <CardTitle tag="h4">Schedule</CardTitle>
+          </CardHeader>
+          <CardBody>
+            <Container fluid className="p-0">
+              <Row className="mb-3">
+                <Button
+                  color="primary"
+                  className="btn btn-primary btn-simple"
+                  onClick={toggleModal}
+                >
+                  Add
+                </Button>
+              </Row>
+              <Row>
+                <Table className="tablesorter" responsive striped>
+                  <thead className="text-primary animation-on-hover">
+                    <tr>
+                      <th>Name</th>
+                      <th>Status</th>
                     </tr>
-                  ))}
-                </tbody>
-              </Table>
-            </Row>
-          </Container>
-        </CardBody>
-      </Card>
-    </div>
+                  </thead>
+                  <tbody>
+                    {schedules &&
+                      schedules.map((schedule) => (
+                        <tr
+                          key={schedule.id}
+                          onClick={() => redirect(schedule.id)}
+                          style={{ cursor: "pointer" }}
+                        >
+                          <td>{schedule.name}</td>
+                          <td>
+                            {" "}
+                            <CustomInput
+                              type="switch"
+                              id="switch-1"
+                              checked={schedule.active}
+                            />
+                          </td>
+                        </tr>
+                      ))}
+                  </tbody>
+                </Table>
+              </Row>
+            </Container>
+          </CardBody>
+        </Card>
+      </div>
+      {<ScheduleAddModal isOpen={isOpen} toggleModal={toggleModal} />}
+    </>
   );
 };
 

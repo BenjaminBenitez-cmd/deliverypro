@@ -16,14 +16,14 @@ export default function Deliveries() {
     <>
       <div className="content">
         <Row>
-          <Col md="3">
+          <Col md="12">
             <Row>
               <Col>
                 <SearchFilter />
               </Col>
             </Row>
           </Col>
-          <Col md="9">
+          <Col md="12">
             <DeliveryTable deliveries={deliveries} status={status} />
           </Col>
         </Row>

@@ -7,6 +7,7 @@ import Deliveries from "views/Deliveries";
 import Drivers from "views/Drivers";
 import Map from "views/Map.js";
 import Schedule from "views/Schedule";
+import ScheduleEdit from "views/ScheduleEdit";
 
 var routes = [
   {
@@ -55,12 +56,21 @@ var routes = [
     layout: "/admin",
   },
   {
+    path: "/schedule/:id",
+    name: "Schedule Edit",
+    icon: "tim-icons icon-calendar-60",
+    component: ScheduleEdit,
+    layout: "/admin",
+    redirect: true,
+  },
+  {
     path: "/schedule",
     name: "Schedule",
     icon: "tim-icons icon-calendar-60",
     component: CreateSchedule,
     layout: "/admin",
   },
+
   {
     path: "/account",
     name: "Account",

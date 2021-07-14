@@ -1,5 +1,13 @@
 import React, { useState } from "react";
-import { Card, CardBody, CardHeader, Input, Button, Row } from "reactstrap";
+import {
+  Card,
+  CardBody,
+  CardHeader,
+  Input,
+  Button,
+  Row,
+  Container,
+} from "reactstrap";
 import DeliveryAddModal from "components/Modals/DeliveryAddModal";
 import { useDispatch } from "react-redux";
 import { filterDeliveries } from "redux/deliveries/DeliverySlice";
@@ -27,25 +35,27 @@ const SearchFilter = () => {
     <>
       <Card className="card-plain">
         <CardHeader>
-          <Row className="justify-content-between px-3">
-            <Button
-              color="success"
-              className="btn-inline"
-              onClick={handleToggle}
-            >
-              Add
-            </Button>
-          </Row>
+          <Container>
+            <Row className="justify-content-between px-0">
+              <div>
+                <Input
+                  type="search"
+                  name="search"
+                  value={search}
+                  onChange={handleChange}
+                  placeholder="Search"
+                />
+              </div>
+              <Button
+                className="btn-inline btn-primary btn-simple"
+                onClick={handleToggle}
+              >
+                Add
+              </Button>
+            </Row>
+          </Container>
         </CardHeader>
-        <CardBody>
-          <Input
-            type="search"
-            name="search"
-            value={search}
-            onChange={handleChange}
-            placeholder="Search"
-          />
-        </CardBody>
+
         {/* <CardFooter>
           <Button
             color="primary"

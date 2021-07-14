@@ -6,7 +6,7 @@ export const getSchedules = createAsyncThunk(
   "schedule/getSchedule",
   async (_, { rejectWithValue }) => {
     try {
-      const results = await ScheduleRequests.getOne();
+      const results = await ScheduleRequests.getActive();
       return results.data.data;
     } catch (err) {
       return rejectWithValue([], err);

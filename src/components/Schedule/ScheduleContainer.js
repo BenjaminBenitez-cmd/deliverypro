@@ -4,13 +4,7 @@ import { Card, Col, Container, Row } from "reactstrap";
 import AddTimeCard from "./AddTimeCard";
 import TimeCard from "./TimeCard";
 
-const ScheduleContainer = ({ dates, days, id, status }) => {
-  if (status === "loading") {
-    return <LoadingSpinner />;
-  } else if (status === "failed") {
-    return <div>An Error occurred, report to developer</div>;
-  }
-
+const ScheduleContainer = ({ dates, days, id }) => {
   return (
     <Container fluid className="p-0">
       <Row>
