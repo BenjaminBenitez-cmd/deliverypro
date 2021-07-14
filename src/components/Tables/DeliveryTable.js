@@ -20,10 +20,12 @@ import LoadingSpinner from "components/loading/LoadingSpinner";
 import useFilterDays from "../../hooks/useFilterDays";
 import ExcelConverter from "components/utils/ExcelConverter";
 import { deleteDelivery } from "redux/deliveries/DeliverySlice";
+import DeliveryEditModal from "components/Modals/DeliveryEditModal";
 
 const DeliveryTable = ({ deliveries, status }) => {
   const dispatch = useDispatch();
   const [isOpen, setIsOpen] = useState(false);
+  const [isEditOpen, setIsEditOpen] = useState(false);
   const [delivery, setDelivery] = useState({});
   // const schedule = useSelector((state) => state.schedule);
 
@@ -56,6 +58,13 @@ const DeliveryTable = ({ deliveries, status }) => {
       setDelivery(deliveries.find((delivery) => delivery.id === id));
     }
     setIsOpen(!isOpen);
+  };
+
+  const handleToggleEditOpen = (id) => {
+    if (id) {
+      setDelivery(deliveries.find((delivery) => delivery.id === id));
+    }
+    setIsEditOpen(!isEditOpen);
   };
 
   const handleDeleteDelivery = (id, e) => {
@@ -98,6 +107,7 @@ const DeliveryTable = ({ deliveries, status }) => {
               onChange={() => dispatch(toggleDelivery(id))}
               checked={delivery_status}
               type="checkbox"
+              className="bg-success"
             />
             <span className="form-check-sign" />
           </Label>
@@ -125,10 +135,10 @@ const DeliveryTable = ({ deliveries, status }) => {
           </Col>
           <Col sm={5}>
             <Button
-              color="primary"
+              color="success"
               className="btn-simple"
               size="sm"
-              onClick={() => handleToggleOpen(id)}
+              onClick={() => handleToggleEditOpen(id)}
             >
               Edit
             </Button>
@@ -173,6 +183,13 @@ const DeliveryTable = ({ deliveries, status }) => {
         <DeliveryDetailsModal
           isOpen={isOpen}
           toggleModal={handleToggleOpen}
+          information={delivery}
+        />
+      )}
+      {isEditOpen && (
+        <DeliveryEditModal
+          isOpen={isEditOpen}
+          toggleModal={handleToggleEditOpen}
           information={delivery}
         />
       )}

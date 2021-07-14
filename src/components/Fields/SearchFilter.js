@@ -29,7 +29,7 @@ const SearchFilter = () => {
         <CardHeader>
           <Row className="justify-content-between px-3">
             <Button
-              color="primary"
+              color="success"
               className="btn-inline"
               onClick={handleToggle}
             >

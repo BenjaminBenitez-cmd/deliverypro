@@ -12,6 +12,7 @@ import { Col, Container, Row, Button, Input, Card, CardBody } from "reactstrap";
 import mapboxgl from "!mapbox-gl";
 import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import "@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css";
+import config from "../../config";
 
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_API;
 
@@ -25,15 +26,12 @@ const Verification = ({ match: { url } }) => {
     if (token.length < 11) return;
     const fetchDelivery = async () => {
       try {
-        const response = await axios.get(
-          process.env.REACT_APP_API + "/verifydelivery",
-          {
-            headers: {
-              "Content-Type": "application/x-www-form-urlencoded",
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await axios.get(config.url + "/verifydelivery", {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            Authorization: `Bearer ${token}`,
+          },
+        });
         setData(response.data.data.delivery);
         setAuthToken(token);
       } catch (e) {
@@ -46,13 +44,17 @@ const Verification = ({ match: { url } }) => {
   if (error) {
     return (
       <div className="wrapper d-flex justify-content-center align-items-center">
-        <h1>We are sorry, this link has expired</h1>
+        <h1 className="h3 text-white">
+          We are sorry, this link has expired or has been used.
+        </h1>
       </div>
     );
   } else if (!data) {
     return (
       <div className="wrapper d-flex justify-content-center align-items-center">
-        <h1>Paste your link in the url bar</h1>
+        <h1 className="h3 text-white">
+          We are sorry, this link has expired or has been used.
+        </h1>
       </div>
     );
   }
@@ -210,7 +212,7 @@ const ConfirmLocation = ({ token }) => {
     if (!longitude || !latitude) return;
     try {
       await axios.post(
-        process.env.REACT_APP_API + "/verifydelivery",
+        config.url + "/verifydelivery",
         {
           longitude: longitude,
           latitude: latitude,

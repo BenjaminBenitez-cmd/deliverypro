@@ -7,7 +7,6 @@ import PerfectScrollbar from "perfect-scrollbar";
 import AdminNavbar from "components/Navbars/AdminNavbar.js";
 import Footer from "components/Footer/Footer.js";
 import Sidebar from "components/Sidebar/Sidebar.js";
-import FixedPlugin from "components/FixedPlugin/FixedPlugin.js";
 import NotificationAlert from "react-notification-alert";
 
 import routes from "routes.js";
@@ -15,35 +14,17 @@ import routes from "routes.js";
 import logo from "assets/img/react-logo.png";
 import { BackgroundColorContext } from "contexts/BackgroundColorContext";
 import { useSelector } from "react-redux";
+import { getUserFromLocalStorage } from "utilities/utilities";
 
 var ps;
 
 function Admin(props) {
   const notificationAlertRef = React.useRef(null);
   const { messages } = useSelector((state) => state.notification);
+  const { user } = getUserFromLocalStorage();
 
   const notify = (place, message) => {
-    var color = Math.floor(Math.random() * 5 + 1);
-    var type;
-    switch (color) {
-      case 1:
-        type = "primary";
-        break;
-      case 2:
-        type = "success";
-        break;
-      case 3:
-        type = "danger";
-        break;
-      case 4:
-        type = "warning";
-        break;
-      case 5:
-        type = "info";
-        break;
-      default:
-        break;
-    }
+    var color = "success";
     var options = {};
     options = {
       place: place,
@@ -52,7 +33,7 @@ function Admin(props) {
           <div>{message}</div>
         </div>
       ),
-      type: type,
+      type: color,
       icon: "tim-icons icon-bell-55",
       autoDismiss: 7,
     };
@@ -141,8 +122,7 @@ function Admin(props) {
             <Sidebar
               routes={routes}
               logo={{
-                outterLink: "https://www.creative-tim.com/",
-                text: "Delivery Pro",
+                text: user.company,
                 imgSrc: logo,
               }}
               toggleSidebar={toggleSidebar}
@@ -167,7 +147,6 @@ function Admin(props) {
               }
             </div>
           </div>
-          <FixedPlugin bgColor={color} handleBgClick={changeColor} />
         </React.Fragment>
       )}
     </BackgroundColorContext.Consumer>

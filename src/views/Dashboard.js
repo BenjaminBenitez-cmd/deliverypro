@@ -1,20 +1,3 @@
-/*!
-
-=========================================================
-* Black Dashboard React v1.2.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/black-dashboard-react
-* Copyright 2020 Creative Tim (https://www.creative-tim.com)
-* Licensed under MIT (https://github.com/creativetimofficial/black-dashboard-react/blob/master/LICENSE.md)
-
-* Coded by Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
 import React, { useEffect } from "react";
 // nodejs library that concatenates classes
 import classNames from "classnames";
@@ -59,7 +42,7 @@ function Dashboard(props) {
       <div className="content">
         <Row>
           <Col xs="12">
-            <Card className="card-chart">
+            <Card className="card-chart card-plain" plain>
               <CardHeader>
                 <Row>
                   <Col className="text-left" sm="6">
@@ -196,7 +179,7 @@ function Dashboard(props) {
         </Row> */}
         <Row>
           <Col lg="6" md="12">
-            <Card>
+            <Card className="card-plain">
               <CardHeader>
                 <CardTitle tag="h4">Pending Deliveries</CardTitle>
               </CardHeader>

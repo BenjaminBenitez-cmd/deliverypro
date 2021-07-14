@@ -1,7 +1,5 @@
 import React, { useEffect } from "react";
-
 import { Row, Col } from "reactstrap";
-
 import SearchFilter from "components/Fields/SearchFilter";
 import DeliveryTable from "components/Tables/DeliveryTable";
 import { useDispatch, useSelector } from "react-redux";

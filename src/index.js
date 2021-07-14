@@ -20,6 +20,8 @@ import { getUserFromLocalStorage } from "utilities/utilities";
 import { authenticate } from "redux/auth/AuthSlice";
 import HiddenOnLogin from "components/EnhancedRoutes/HiddenOnLogin";
 import Verification from "layouts/Customers/Verification";
+import Signup from "layouts/Authentication/Signup";
+import SignupAuthenticate from "layouts/Authentication/SignupVerify";
 
 const user = getUserFromLocalStorage();
 
@@ -33,9 +35,13 @@ ReactDOM.render(
       <BackgroundColorWrapper>
         <BrowserRouter>
           <Switch>
-            <ProtectedRoute
-              path="/admin"
-              render={(props) => <AdminLayout {...props} />}
+            <HiddenOnLogin
+              path="/authenticate/:token"
+              render={(props) => <SignupAuthenticate {...props} />}
+            />
+            <HiddenOnLogin
+              path="/signup"
+              render={(props) => <Signup {...props} />}
             />
             <HiddenOnLogin
               path="/signin"
@@ -44,6 +50,10 @@ ReactDOM.render(
             <Route
               path="/verifyaddress/:token"
               render={(props) => <Verification {...props} />}
+            />
+            <ProtectedRoute
+              path="/admin"
+              render={(props) => <AdminLayout {...props} />}
             />
             <Redirect from="/" to="/admin/dashboard" />
           </Switch>

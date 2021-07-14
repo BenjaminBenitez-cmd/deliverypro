@@ -3,10 +3,10 @@ import { createContext } from "react";
 export const backgroundColors = {
   primary: "primary",
   blue: "blue",
-  green: "green",
+  green: "success",
 };
 
 export const BackgroundColorContext = createContext({
-  color: backgroundColors.blue,
+  color: backgroundColors.green,
   changeColor: (color) => {},
 });

@@ -121,7 +121,7 @@ export default function Drivers() {
                     </Row>
                   </CardBody>
                   <CardFooter>
-                    <Button color="primary" type="submit">
+                    <Button color="success" type="submit">
                       Invite
                     </Button>
                   </CardFooter>

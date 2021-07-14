@@ -104,7 +104,7 @@ export const deliverySlice = createSlice({
     },
     [addDelivery.fulfilled]: (state, action) => {
       state.loading = false;
-      state.deliveries.push(action.payload);
+      state.deliveries.unshift(action.payload);
     },
     [addDelivery.rejected]: (state) => {
       state.loading = false;

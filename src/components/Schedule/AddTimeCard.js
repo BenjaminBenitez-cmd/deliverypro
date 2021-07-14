@@ -43,7 +43,7 @@ const AddTimeCard = ({ schedule_id, name_of_day_id }) => {
           <Col sm={2}>
             <Button
               className="btn-link"
-              color="primary"
+              color="success"
               onClick={() => dispatch(addTime(values))}
             >
               <i className="tim-icons icon-check-2"></i>

@@ -1,8 +1,8 @@
 export const statustoText = (status) => {
   if (status) {
-    return <span className="text-success">Fullfilled</span>;
+    return <span>Fullfilled</span>;
   } else {
-    return <span className="text-info">Pending</span>;
+    return <span>Pending</span>;
   }
 };
 
