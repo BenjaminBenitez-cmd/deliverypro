@@ -81,7 +81,7 @@ const DeliveryTable = ({ deliveries, status }) => {
         <p className="h5 text-white">An Error occurred, report to developer</p>
       </div>
     );
-  } else if (deliveries.length <= 0) {
+  } else if (deliveries.length === 0) {
     return (
       <div className="h-100 d-flex justify-content-center align-items-end">
         <p className="h5 text-white">No deliveries added, add some : )</p>

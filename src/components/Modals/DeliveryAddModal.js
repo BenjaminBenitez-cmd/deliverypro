@@ -16,7 +16,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getNextDay } from "utilities/utilities";
 
 const DeliveryAddModal = ({ isOpen, toggleModal }) => {
-  const days = useSelector((state) => state.schedule.days);
+  const days = useSelector((state) => state.schedule.active.time);
   const dispatch = useDispatch();
 
   const phoneRegExp =

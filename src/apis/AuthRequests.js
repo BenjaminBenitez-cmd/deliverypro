@@ -2,7 +2,7 @@ import axios from "axios";
 import config from "../config";
 
 const axiosInstance = axios.create({
-  baseURL: config.url,
+  baseURL: config.URL,
 });
 
 const signin = (values) => axiosInstance.post("/signin", values);

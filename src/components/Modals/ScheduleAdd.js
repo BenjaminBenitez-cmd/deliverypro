@@ -25,7 +25,9 @@ const ScheduleAddModal = ({ isOpen, toggleModal }) => {
     try {
       const response = await ScheduleRequests.createOne(values);
       console.log(response.data.data);
-    } catch {}
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const onSubmit = async (values, { setSubmitting }) => {

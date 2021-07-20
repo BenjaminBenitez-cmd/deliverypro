@@ -1,28 +1,28 @@
-import LoadingSpinner from "components/loading/LoadingSpinner";
 import React from "react";
 import { Card, Col, Container, Row } from "reactstrap";
 import AddTimeCard from "./AddTimeCard";
 import TimeCard from "./TimeCard";
 
-const ScheduleContainer = ({ dates, days, id }) => {
+const ScheduleContainer = ({ schedule, daysAvailable }) => {
   return (
     <Container fluid className="p-0">
       <Row>
         <Card className="card-plain">
           <Container>
-            {dates &&
-              dates.map((date, index) => (
+            {daysAvailable &&
+              daysAvailable.map((daysAvailable, index) => (
                 <Col sm={6} key={index}>
                   <Row>
                     <Col sm={12} className="mb-2">
-                      <p>{date.name}</p>
+                      <p>{daysAvailable.name}</p>
                     </Col>
                   </Row>
                   <Row>
-                    {days &&
-                      days.map((time, index) => {
+                    {schedule.time &&
+                      schedule.time.map((time, index) => {
                         return (
-                          time.name_of_day_id.toString() === date.id && (
+                          time.name_of_day_id.toString() ===
+                            daysAvailable.id && (
                             <TimeCard key={index} {...time} />
                           )
                         );
@@ -31,9 +31,9 @@ const ScheduleContainer = ({ dates, days, id }) => {
                   <Row>
                     <Col sm={12}>
                       <AddTimeCard
-                        schedule_id={id}
-                        name_of_day_id={date.id}
-                        name={date.name}
+                        schedule_id={schedule.id}
+                        name_of_day_id={daysAvailable.id}
+                        name={daysAvailable.name}
                       />
                     </Col>
                   </Row>

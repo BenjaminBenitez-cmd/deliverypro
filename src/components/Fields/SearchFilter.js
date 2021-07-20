@@ -1,13 +1,5 @@
 import React, { useState } from "react";
-import {
-  Card,
-  CardBody,
-  CardHeader,
-  Input,
-  Button,
-  Row,
-  Container,
-} from "reactstrap";
+import { Card, CardHeader, Input, Button, Row, Container } from "reactstrap";
 import DeliveryAddModal from "components/Modals/DeliveryAddModal";
 import { useDispatch } from "react-redux";
 import { filterDeliveries } from "redux/deliveries/DeliverySlice";

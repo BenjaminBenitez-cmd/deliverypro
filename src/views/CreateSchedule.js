@@ -1,6 +1,6 @@
 import { getSchedules } from "redux/schedules/ScheduleSlice";
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   Card,
   CardBody,
@@ -12,45 +12,18 @@ import {
   Button,
   CustomInput,
 } from "reactstrap";
-import { ScheduleRequests } from "apis";
 import ScheduleAddModal from "components/Modals/ScheduleAdd";
-import { Link, useHistory } from "react-router-dom";
-
-const data = [
-  {
-    id: 1,
-    name: "Monday schedule",
-    active: false,
-  },
-  {
-    id: 2,
-    name: "March special schedule",
-    active: false,
-  },
-  {
-    id: 3,
-    name: "Summer Fast schedule",
-    active: true,
-  },
-];
+import { useHistory } from "react-router-dom";
 
 const CreateSchedule = () => {
+  const dispatch = useDispatch();
   const history = useHistory();
-  const [schedules, setSchedules] = useState(null);
+  const { schedules } = useSelector((state) => state.schedule);
+
   const [isOpen, setIsOpen] = useState(false);
 
   //create toggle for modal
   const toggleModal = () => setIsOpen(!isOpen);
-
-  //fetch schedules
-  const fetchSchedules = async () => {
-    try {
-      const response = await ScheduleRequests.getMany();
-      setSchedules(response.data.data.schedules);
-    } catch (err) {
-      console.log(err);
-    }
-  };
 
   //redirect to editable window
   const redirect = (id) => {
@@ -58,7 +31,7 @@ const CreateSchedule = () => {
   };
 
   useEffect(() => {
-    fetchSchedules();
+    dispatch(getSchedules());
   }, []);
 
   return (

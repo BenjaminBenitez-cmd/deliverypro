@@ -26,7 +26,7 @@ const Verification = ({ match: { url } }) => {
     if (token.length < 11) return;
     const fetchDelivery = async () => {
       try {
-        const response = await axios.get(config.url + "/verifydelivery", {
+        const response = await axios.get(config.URL + "/verifydelivery", {
           headers: {
             "Content-Type": "application/x-www-form-urlencoded",
             Authorization: `Bearer ${token}`,
@@ -212,7 +212,7 @@ const ConfirmLocation = ({ token }) => {
     if (!longitude || !latitude) return;
     try {
       await axios.post(
-        config.url + "/verifydelivery",
+        config.URL + "/verifydelivery",
         {
           longitude: longitude,
           latitude: latitude,

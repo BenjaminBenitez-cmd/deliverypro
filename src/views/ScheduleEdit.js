@@ -10,43 +10,38 @@ import {
   Row,
 } from "reactstrap";
 import ScheduleContainer from "components/Schedule/ScheduleContainer";
-import { ScheduleRequests } from "apis";
 import { useParams } from "react-router-dom";
 
 const ScheduleEdit = () => {
+  const dispatch = useDispatch();
   const { id } = useParams();
-  const [name, setName] = useState(null);
-  const [days, setDays] = useState(null);
-  const [dates, setDates] = useState(null);
+  const { daysAvailable, schedules } = useSelector((state) => state.schedule);
 
-  //fetch the schedule by id
-  const fetchSchedule = async (id) => {
-    try {
-      const response = await ScheduleRequests.getOne(id);
-      setDays(response.data.data.schedule.days);
-      setDates(response.data.data.days_available);
-      setName(response.data.data.schedule.name);
-    } catch (err) {
-      console.log(err);
-    }
+  const filterByID = (array, id) => {
+    const schedule = array.find((schedule) => schedule.id === id);
+    return schedule;
   };
 
   useEffect(() => {
-    if (!id) return;
-    fetchSchedule(id);
-  }, [id]);
+    dispatch(getSchedules());
+  }, [dispatch]);
 
   return (
     <div className="content">
       <Card className="card-plain">
         <CardHeader>
-          <CardTitle tag="h4">{name}</CardTitle>
+          {/* <CardTitle tag="h4">{schedules}</CardTitle> */}
         </CardHeader>
         <CardBody>
           <Container fluid className="p-0">
             <Row>
               <Card className="card-plain">
-                <ScheduleContainer dates={dates} days={days} id={id} />
+                {schedules && (
+                  <ScheduleContainer
+                    daysAvailable={daysAvailable}
+                    schedule={filterByID(schedules, id)}
+                  />
+                )}
               </Card>
             </Row>
           </Container>

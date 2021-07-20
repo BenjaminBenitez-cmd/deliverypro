@@ -3,10 +3,10 @@ import { ScheduleRequests, TimeRequests } from "../../apis";
 import { setMessage } from "../notifications/NotificationsSlice";
 
 export const getSchedules = createAsyncThunk(
-  "schedule/getSchedule",
+  "schedule/getSchedules",
   async (_, { rejectWithValue }) => {
     try {
-      const results = await ScheduleRequests.getActive();
+      const results = await ScheduleRequests.getMany();
       return results.data.data;
     } catch (err) {
       return rejectWithValue([], err);
@@ -18,7 +18,7 @@ export const addTime = createAsyncThunk(
   "schedule/addTime",
   async (values, { rejectWithValue, dispatch }) => {
     try {
-      const results = await TimeRequests.postOne(values);
+      const results = await TimeRequests.postOne(values.schedule_id, values);
       dispatch(setMessage("Success, added time"));
       return results.data.data.time;
     } catch (err) {
@@ -30,11 +30,11 @@ export const addTime = createAsyncThunk(
 
 export const deleteTime = createAsyncThunk(
   "schedule/deleteTime",
-  async (id, { rejectWithValue, dispatch }) => {
+  async (values, { rejectWithValue, dispatch }) => {
     try {
-      await TimeRequests.deleteOne(id);
+      await TimeRequests.deleteOne(values.schedule_id, values.id);
       dispatch(setMessage("Success, deleted time"));
-      return id;
+      return values;
     } catch (err) {
       dispatch(setMessage("Error, unable to delete time"));
       return rejectWithValue([], err);
@@ -46,10 +46,10 @@ export const updateTime = createAsyncThunk(
   "schedule/updatetime",
   async (values, { rejectWithValue, dispatch }) => {
     try {
-      const { id, body } = values;
-      await TimeRequests.updateOne(id, body);
+      const body = { time_start: values.time_start, time_end: values.time_end };
+      await TimeRequests.updateOne(values.schedule_id, values.id, body);
       dispatch(setMessage("Successfully updated time"));
-      return { id, body };
+      return values;
     } catch (err) {
       dispatch(setMessage("Error updating time"));
       return rejectWithValue([], err);
@@ -61,43 +61,92 @@ export const scheduleSlice = createSlice({
   name: "schedule",
   initialState: {
     status: "",
-    id: "",
-    days: [],
-    dates: [],
+    schedules: [],
+    daysAvailable: [],
+    active: null,
   },
   extraReducers: {
     [getSchedules.pending]: (state) => {
       state.status = "loading";
     },
     [getSchedules.fulfilled]: (state, action) => {
-      state.days = action.payload.schedule.days;
-      state.dates = action.payload.days_available;
-      state.id = action.payload.schedule.id;
+      //set days available
+      state.daysAvailable = action.payload.days_available;
+      //set the new schedules
+      state.schedules = action.payload.schedules;
+      //find an active schedule
+      const activeSchedule = action.payload.schedules.find(
+        (schedule) => schedule.active === true
+      );
+      //add active schedule
+      if (activeSchedule !== null) {
+        state.active = activeSchedule;
+      }
+
+      //set the active schedule
       state.status = "success";
     },
     [getSchedules.rejected]: (state) => {
       state.status = "failed";
     },
     [addTime.fulfilled]: (state, action) => {
-      state.days.push(action.payload);
+      if (!action.payload) return state;
+      const scheduleIndex = state.schedules.findIndex(
+        (schedule) => schedule.id === action.payload.schedule_id.toString()
+      );
+      state.schedules[scheduleIndex].time.push(action.payload);
+      //find an active schedule
+      const activeSchedule = state.schedules.find(
+        (schedule) => schedule.active === true
+      );
+      //add active schedule
+      if (activeSchedule !== null) {
+        state.active = activeSchedule;
+      }
       state.status = "success";
     },
     [deleteTime.fulfilled]: (state, action) => {
       if (!action.payload) {
         return state;
       }
-      const index = state.days.findIndex((day) => day.id === action.payload);
-      state.days.splice(index, 1);
+      //get the schedules index
+      const scheduleIndex = state.schedules.findIndex(
+        (schedule) => schedule.id === action.payload.schedule_id.toString()
+      );
+
+      //get the times index
+      const timeIndex = state.schedules[scheduleIndex].time.findIndex(
+        (time) => time.id === action.payload.id
+      );
+      console.log(scheduleIndex, timeIndex);
+      state.schedules[scheduleIndex].time.splice(timeIndex, 1);
       state.status = "success";
     },
     [updateTime.fulfilled]: (state, action) => {
-      if (!action.payload.id || !action.payload.body) {
+      if (
+        !action.payload.id ||
+        !action.payload.time_end ||
+        !action.payload.time_start ||
+        !action.payload.schedule_id
+      ) {
         return state;
       }
-      const { id, body } = action.payload;
+      //get the schedules index
+      const scheduleIndex = state.schedules.findIndex(
+        (schedule) => schedule.id === action.payload.schedule_id
+      );
+      //get the times index
+      const timeIndex = state.schedules[scheduleIndex].time.findIndex(
+        (time) => time.id === action.payload.id
+      );
+      //update the time
+      state.schedules[scheduleIndex].time[timeIndex] = {
+        ...state.schedules[scheduleIndex].time[timeIndex],
+        time_start: action.payload.time_start,
+        time_end: action.payload.time_end,
+      };
 
-      const index = state.days.findIndex((day) => day.id === id);
-      state.days[index] = { ...state.days[index], ...body };
+      state.status = "success";
     },
   },
 });

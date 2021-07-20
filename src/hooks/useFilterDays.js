@@ -7,16 +7,17 @@ import { getSchedules } from "redux/schedules/ScheduleSlice";
 
 const useFilterDays = () => {
   const schedule = useSelector((state) => state.schedule);
-  const distpatch = useDispatch();
+  const dispatch = useDispatch();
+  console.log("this is the schedule", schedule.daysAvailable);
 
   const deliveryDayToText = (id) => {
-    let day = schedule.dates.find((day) => day.id === id.toString());
+    let day = schedule.daysAvailable.find((day) => day.id === id.toString());
     if (day === undefined) return "Not found";
     return day.name;
   };
 
   const deliveryUniqueDays = () => {
-    return schedule.days
+    return schedule.active.time
       .filter(
         (
           (set) => (f) =>
@@ -33,15 +34,15 @@ const useFilterDays = () => {
 
   const deliveryTimeToText = (id) => {
     if (!id) return "no ID provided";
-    let { time_start, time_end } = schedule.days.find(
+    let { time_start, time_end } = schedule.active.time.find(
       (time) => time.id === id.toString()
     );
     return time_start + " - to - " + time_end;
   };
 
   useEffect(() => {
-    distpatch(getSchedules());
-  }, [distpatch]);
+    dispatch(getSchedules());
+  }, [dispatch]);
 
   return {
     deliveryDayToText,

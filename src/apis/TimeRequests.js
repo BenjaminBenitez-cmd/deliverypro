@@ -1,15 +1,16 @@
 import axios from "./CustomAxios";
 
-const address = "/time";
+export const deleteOne = (scheduleid, timeid) =>
+  axios.delete(`/schedules/${scheduleid}/time/${timeid}`);
 
-export const deleteOne = (id) => axios.delete(`/schedules/time/${id}`);
+export const getOneById = (scheduleid, timeid) =>
+  axios.get(`/schedules/${scheduleid}/time/${timeid}`);
 
-export const getOneById = (id) => axios.get(`${address}/${id}`);
+export const postOne = (scheduleid, values) =>
+  axios.post(`/schedules/${scheduleid}/time`, values);
 
-export const postOne = (values) => axios.post(`/schedules/time`, values);
-
-export const updateOne = (id, values) =>
-  axios.put(`/schedules/time/${id}`, values);
+export const updateOne = (scheduleid, timeid, values) =>
+  axios.put(`/schedules/${scheduleid}/time/${timeid}`, values);
 
 const TimeRequests = {
   deleteOne,

@@ -14,8 +14,9 @@ import {
   Button,
 } from "reactstrap";
 import { AddressRequests } from "apis";
+import config from "../config";
 
-mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_API;
+mapboxgl.accessToken = config.MAPBOX_TOKEN;
 
 function Map() {
   const [geoJSON, setGeoJSON] = useState(null);
@@ -52,7 +53,7 @@ function Map() {
               <CardHeader>Delivery Map</CardHeader>
               <CardBody>
                 <Row>
-                  <Col sm={3}>
+                  <Col sm={3} className="pl-0">
                     {geoJSON && (
                       <MapDeliveryList
                         deliveries={geoJSON.features}
@@ -179,9 +180,7 @@ const MapDeliveryList = ({ deliveries, handleToggle, activeID }) => {
   const TableRow = ({ handleToggle, properties }) => (
     <tr key={properties.id} onClick={() => handleToggle(properties.id)}>
       <td>
-        <Button className="btn btn-link pl-0" color="success" role="button">
-          {properties.name}
-        </Button>
+        <h5 className="pl-0">{properties.name}</h5>
         <p className="text-muted">
           {properties.verified ? "Verified" : "Unverified"}
         </p>

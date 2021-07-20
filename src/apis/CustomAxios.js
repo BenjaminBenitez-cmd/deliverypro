@@ -3,7 +3,7 @@ import { getUserFromLocalStorage } from "utilities/utilities";
 import config from "../config";
 
 let axiosInstance = axios.create({
-  baseURL: config.url + "/api/v1",
+  baseURL: config.URL + "/api/v1",
 });
 
 axiosInstance.interceptors.request.use(function (config) {

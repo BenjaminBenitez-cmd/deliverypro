@@ -3,7 +3,7 @@ import { Col, Input, Button, Row, Container } from "reactstrap";
 import { useDispatch } from "react-redux";
 import { deleteTime, updateTime } from "../../redux/schedules/ScheduleSlice";
 
-const TimeCard = ({ time_start, time_end, id }) => {
+const TimeCard = ({ time_start, time_end, schedule_id, id }) => {
   //DELETE A TIME
   const dispatch = useDispatch();
 
@@ -24,11 +24,14 @@ const TimeCard = ({ time_start, time_end, id }) => {
     if (!time.time_start || !time.time_end) {
       return console.error("Missing fields");
     }
-
-    let id = time.id;
-    let body = { time_start: time.time_start, time_end: time.time_end };
-
-    dispatch(updateTime({ id, body }));
+    dispatch(
+      updateTime({
+        id,
+        time_start: time.time_start,
+        time_end: time.time_end,
+        schedule_id,
+      })
+    );
   };
 
   return (
@@ -37,7 +40,7 @@ const TimeCard = ({ time_start, time_end, id }) => {
         <Col xs={5} className="my-1">
           <Input
             type="time"
-            value={time_start}
+            value={time.time_start}
             name="time_start"
             onChange={handleTimeChange}
           />
@@ -45,7 +48,7 @@ const TimeCard = ({ time_start, time_end, id }) => {
         <Col xs={5} className="my-1">
           <Input
             type="time"
-            value={time_end}
+            value={time.time_end}
             name="time_end"
             onChange={handleTimeChange}
           />
@@ -63,7 +66,7 @@ const TimeCard = ({ time_start, time_end, id }) => {
             <Button
               className="btn-link"
               color="primary"
-              onClick={() => dispatch(deleteTime(id))}
+              onClick={() => dispatch(deleteTime({ schedule_id, id }))}
             >
               <i className="tim-icons icon-simple-remove"></i>
             </Button>
