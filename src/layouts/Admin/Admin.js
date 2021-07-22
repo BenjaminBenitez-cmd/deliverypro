@@ -124,6 +124,7 @@ function Admin(props) {
               logo={{
                 text: user.company,
                 imgSrc: logo,
+                innerLink: "/admin/dashboard",
               }}
               toggleSidebar={toggleSidebar}
             />

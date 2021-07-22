@@ -99,16 +99,16 @@ const DeliveryTable = ({ deliveries, status }) => {
     street,
     district,
   }) => (
-    <tr key={id} onDoubleClick={() => handleToggleOpen(id)}>
+    <tr onDoubleClick={() => handleToggleOpen(id)}>
       <td>
         <FormGroup check>
           <Label check>
-            <Input
+            {/* <Input
               onChange={() => dispatch(toggleDelivery(id))}
               checked={delivery_status}
               type="checkbox"
               className="bg-success"
-            />
+            /> */}
             <span className="form-check-sign" />
           </Label>
         </FormGroup>
@@ -173,7 +173,7 @@ const DeliveryTable = ({ deliveries, status }) => {
             <tbody>
               {deliveries &&
                 filterDeliveries().map((delivery) => (
-                  <TableRow {...delivery} />
+                  <TableRow key={delivery.id} {...delivery} />
                 ))}
             </tbody>
           </Table>

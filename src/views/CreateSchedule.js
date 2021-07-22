@@ -71,11 +71,11 @@ const CreateSchedule = () => {
                           <td>{schedule.name}</td>
                           <td>
                             {" "}
-                            <CustomInput
+                            {/* <CustomInput
                               type="switch"
                               id="switch-1"
                               checked={schedule.active}
-                            />
+                            /> */}
                           </td>
                         </tr>
                       ))}

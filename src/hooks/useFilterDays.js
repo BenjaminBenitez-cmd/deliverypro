@@ -8,7 +8,6 @@ import { getSchedules } from "redux/schedules/ScheduleSlice";
 const useFilterDays = () => {
   const schedule = useSelector((state) => state.schedule);
   const dispatch = useDispatch();
-  console.log("this is the schedule", schedule.daysAvailable);
 
   const deliveryDayToText = (id) => {
     let day = schedule.daysAvailable.find((day) => day.id === id.toString());
@@ -33,7 +32,8 @@ const useFilterDays = () => {
   };
 
   const deliveryTimeToText = (id) => {
-    if (!id) return "no ID provided";
+    if (!id) return;
+    if (!schedule.active) return;
     let { time_start, time_end } = schedule.active.time.find(
       (time) => time.id === id.toString()
     );

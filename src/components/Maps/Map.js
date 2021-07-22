@@ -7,8 +7,11 @@ import "@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css";
 // reactstrap components
 import { Card } from "reactstrap";
 import classNames from "classnames";
+import config from "config";
 
-mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_API;
+console.log(config.MAPBOX_TOKEN);
+
+mapboxgl.accessToken = config.MAP_BOX_TOKEN;
 
 function Map({
   updateLocation,

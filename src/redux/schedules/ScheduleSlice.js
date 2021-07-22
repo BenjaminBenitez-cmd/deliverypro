@@ -118,7 +118,6 @@ export const scheduleSlice = createSlice({
       const timeIndex = state.schedules[scheduleIndex].time.findIndex(
         (time) => time.id === action.payload.id
       );
-      console.log(scheduleIndex, timeIndex);
       state.schedules[scheduleIndex].time.splice(timeIndex, 1);
       state.status = "success";
     },

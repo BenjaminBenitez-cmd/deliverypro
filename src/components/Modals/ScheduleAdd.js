@@ -23,8 +23,7 @@ const ScheduleAddModal = ({ isOpen, toggleModal }) => {
 
   const addASchedule = async (values) => {
     try {
-      const response = await ScheduleRequests.createOne(values);
-      console.log(response.data.data);
+      await ScheduleRequests.createOne(values);
     } catch (err) {
       console.log(err);
     }
