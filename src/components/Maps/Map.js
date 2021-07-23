@@ -9,9 +9,7 @@ import { Card } from "reactstrap";
 import classNames from "classnames";
 import config from "config";
 
-console.log(config.MAPBOX_TOKEN);
-
-mapboxgl.accessToken = config.MAP_BOX_TOKEN;
+mapboxgl.accessToken = config.MAPBOX_TOKEN;
 
 function Map({
   updateLocation,

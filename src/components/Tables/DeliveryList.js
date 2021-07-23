@@ -1,4 +1,4 @@
-import { Button } from "bootstrap";
+import { Button } from "reactstrap";
 import React from "react";
 import { Card, CardBody, CardFooter, Table } from "reactstrap";
 import TableRow from "./DeliveryTableRow";

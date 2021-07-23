@@ -27,6 +27,7 @@
     "react-router-dom": "5.2.0",
     "react-scripts": "4.0.1",
     "reactstrap": "8.7.1",
+    "worker-loader": "^3.0.8",
     "xlsx": "^0.17.0",
     "yup": "^0.32.9"
   },

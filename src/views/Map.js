@@ -45,24 +45,24 @@ function Map() {
             <Card className="card-plain">
               <CardHeader>Delivery Map</CardHeader>
               <CardBody>
-                <Row>
-                  <Col sm={3} className="pl-0">
-                    {geoJSON && (
+                {geoJSON && (
+                  <Row>
+                    <Col sm={3} className="pl-0">
                       <MapDeliveryList
                         deliveries={geoJSON.features}
                         handleToggle={handleToggle}
                         activeID={toggle}
                       />
-                    )}
-                  </Col>
-                  <Col sm={9}>
-                    <InnerMap
-                      geoJSON={geoJSON}
-                      toggle={toggle}
-                      handleToggle={handleToggle}
-                    />
-                  </Col>
-                </Row>
+                    </Col>
+                    <Col sm={9}>
+                      <InnerMap
+                        geoJSON={geoJSON}
+                        toggle={toggle}
+                        handleToggle={handleToggle}
+                      />
+                    </Col>
+                  </Row>
+                )}
               </CardBody>
             </Card>
           </Col>
