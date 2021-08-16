@@ -3,7 +3,13 @@ import React from "react";
 import { Card, CardBody, CardFooter, Table } from "reactstrap";
 import TableRow from "./DeliveryTableRow";
 
-const MapDeliveryList = ({ deliveries, handleToggle, activeID }) => {
+const MapDeliveryList = ({
+  deliveries,
+  handleToggle,
+  activeID,
+  setGenerate,
+  generate,
+}) => {
   return (
     <Card className="card-plain">
       <CardBody>
@@ -21,7 +27,9 @@ const MapDeliveryList = ({ deliveries, handleToggle, activeID }) => {
         </Table>
       </CardBody>
       <CardFooter>
-        <Button color="success">Generate</Button>
+        <Button color="info" onClick={() => setGenerate(true)}>
+          {generate ? "Generating..." : "Generate"}
+        </Button>
       </CardFooter>
     </Card>
   );

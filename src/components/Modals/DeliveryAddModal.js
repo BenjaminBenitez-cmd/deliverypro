@@ -221,7 +221,7 @@ const DeliveryAddModal = ({ isOpen, toggleModal }) => {
               <Button color="secondary" onClick={toggleModal}>
                 Close
               </Button>
-              <Button className="btn-fill" color="primary" type="submit">
+              <Button className="btn-fill" color="info" type="submit">
                 Save
               </Button>
             </ModalFooter>

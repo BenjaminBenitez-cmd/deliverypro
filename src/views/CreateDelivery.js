@@ -207,11 +207,7 @@ function CreateDelivery() {
                       </Row>
                     </CardBody>
                     <CardFooter>
-                      <Button
-                        className="btn-fill"
-                        color="primary"
-                        type="submit"
-                      >
+                      <Button className="btn-fill" color="info" type="submit">
                         Save
                       </Button>
                     </CardFooter>

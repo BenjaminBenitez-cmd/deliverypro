@@ -222,14 +222,14 @@ const DeliveryEditModal = ({ isOpen, toggleModal, information }) => {
                   <Button
                     className="btn-fill"
                     type="button"
-                    color="primary"
+                    color="info"
                     onClick={stepUp}
                   >
                     Next
                   </Button>
                 )}
                 {step === 2 && (
-                  <Button className="btn-fill" type="submit" color="primary">
+                  <Button className="btn-fill" type="submit" color="info">
                     Save
                   </Button>
                 )}

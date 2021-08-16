@@ -1,11 +1,11 @@
 import Account from "views/Account";
 import CreateDelivery from "views/CreateDelivery";
-import CreateSchedule from "views/CreateSchedule";
 import Customers from "views/Customers";
 import Dashboard from "views/Dashboard.js";
 import Deliveries from "views/Deliveries";
 import Drivers from "views/Drivers";
 import Map from "views/Map.js";
+import Schedule from "views/Schedule";
 import ScheduleEdit from "views/ScheduleEdit";
 
 var routes = [
@@ -66,7 +66,7 @@ var routes = [
     path: "/schedule",
     name: "Schedule",
     icon: "tim-icons icon-calendar-60",
-    component: CreateSchedule,
+    component: Schedule,
     layout: "/admin",
   },
 

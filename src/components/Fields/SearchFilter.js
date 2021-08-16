@@ -39,7 +39,7 @@ const SearchFilter = () => {
                 />
               </div>
               <Button
-                className="btn-inline btn-primary btn-simple"
+                className="btn-inline btn-info btn-simple"
                 onClick={handleToggle}
               >
                 Add
@@ -47,22 +47,6 @@ const SearchFilter = () => {
             </Row>
           </Container>
         </CardHeader>
-
-        {/* <CardFooter>
-          <Button
-            color="primary"
-            className="btn-simple"
-            onClick={toggleSelectAll}
-          >
-            {selectAll ? "Deselect" : "Select All"}
-          </Button>
-          <Button color="primary" className="btn-simple" disabled={!selectAll}>
-            Delete
-          </Button>
-          <Button color="primary" className="btn-simple" disabled={!selectAll}>
-            Archive
-          </Button>
-        </CardFooter> */}
       </Card>
       {isAddOpen && (
         <DeliveryAddModal isOpen={isAddOpen} toggleModal={handleToggle} />

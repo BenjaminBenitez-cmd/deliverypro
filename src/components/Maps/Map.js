@@ -9,8 +9,6 @@ import { Card } from "reactstrap";
 import classNames from "classnames";
 import config from "config";
 
-mapboxgl.accessToken = config.MAPBOX_TOKEN;
-
 function Map({
   updateLocation,
   longitude,
@@ -19,6 +17,7 @@ function Map({
   mapStyle,
   search,
 }) {
+  mapboxgl.accessToken = config.MAPBOX_TOKEN;
   const zoom = 12;
   const mapContainer = useRef(null);
   const map = useRef(null);
@@ -32,9 +31,14 @@ function Map({
       zoom: zoom,
     });
 
-    new mapboxgl.Marker({ draggable: draggable })
+    let marker = new mapboxgl.Marker({ draggable: draggable })
       .setLngLat([longitude, latitude])
       .addTo(map.current);
+
+    function onDragEnd() {
+      const lngLat = marker.getLngLat();
+      updateLocation({ longitude: lngLat.lng, latitude: lngLat.lat });
+    }
 
     if (!search) return;
 
@@ -49,34 +53,15 @@ function Map({
       },
     });
 
-    map.current.on("load", function () {});
-
     map.current.addControl(geocoder);
 
     map.current.on("load", function () {
-      map.current.addSource("single-point", {
-        type: "geojson",
-        data: {
-          type: "FeatureCollection",
-          features: [],
-        },
-      });
-
-      map.current.addLayer({
-        id: "point",
-        source: "single-point",
-        type: "circle",
-        paint: {
-          "circle-radius": 10,
-          "circle-color": "#448ee4",
-        },
-      });
-
       // Listen for the `result` event from the Geocoder
       // `result` event is triggered when a user makes a selection
       //  Add a marker at the result's coordinates
+      marker.on("dragend", onDragEnd);
+
       geocoder.on("result", function (e) {
-        map.current.getSource("single-point").setData(e.result.geometry);
         const temp = e.result;
         updateLocation({
           longitude: temp.center[0],
@@ -84,6 +69,7 @@ function Map({
           street: temp.place_name.split(", ")[0],
           district: temp.context[0].text,
         });
+        marker.setLngLat([temp.center[0], temp.center[1]]);
       });
     });
   });

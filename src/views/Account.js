@@ -250,7 +250,7 @@ const AccountDetails = ({ information }) => {
                 </Row>
               </CardBody>
               <CardFooter>
-                <Button className="btn-fill" color="primary" type="submit">
+                <Button className="btn-fill" color="info" type="submit">
                   Save
                 </Button>
               </CardFooter>
@@ -276,11 +276,7 @@ const APISection = () => {
         </CardHeader>
         <CardBody>
           <div>
-            <Button
-              className="float-right"
-              color="primary"
-              onClick={toggleOpen}
-            >
+            <Button className="float-right" color="info" onClick={toggleOpen}>
               Generate <i className="tim-icons icon-simple-add"></i>
             </Button>
           </div>

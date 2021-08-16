@@ -1,7 +1,11 @@
 import React from "react";
 
 const TableRow = ({ handleToggle, properties }) => (
-  <tr key={properties.id} onClick={() => handleToggle(properties.id)}>
+  <tr
+    key={properties.id}
+    onClick={() => handleToggle(properties.id)}
+    style={{ cursor: "pointer" }}
+  >
     <td>
       <h5 className="pl-0">{properties.name}</h5>
       <p className="text-muted">

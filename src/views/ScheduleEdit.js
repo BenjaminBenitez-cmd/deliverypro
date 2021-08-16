@@ -1,14 +1,7 @@
 import { getSchedules } from "redux/schedules/ScheduleSlice";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  Card,
-  CardBody,
-  CardHeader,
-  CardTitle,
-  Container,
-  Row,
-} from "reactstrap";
+import { Card, CardBody, CardHeader, Container, Row } from "reactstrap";
 import ScheduleContainer from "components/Schedule/ScheduleContainer";
 import { useParams } from "react-router-dom";
 

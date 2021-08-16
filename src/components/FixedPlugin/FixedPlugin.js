@@ -70,7 +70,7 @@ function FixedPlugin(props) {
           <li className="button-container">
             <Button
               href="https://www.creative-tim.com/product/black-dashboard-react"
-              color="primary"
+              color="info"
               block
               className="btn-round"
             >

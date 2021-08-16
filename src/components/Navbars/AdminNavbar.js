@@ -148,8 +148,8 @@ function AdminNavbar(props) {
                     <DropdownItem className="nav-item">Account</DropdownItem>
                   </Link>
                   <DropdownItem divider tag="li" />
-                  <NavLink tag="li">
-                    <DropdownItem className="nav-item" onClick={handleClick}>
+                  <NavLink className="px-0">
+                    <DropdownItem className="nav-item " onClick={handleClick}>
                       Log out
                     </DropdownItem>
                   </NavLink>

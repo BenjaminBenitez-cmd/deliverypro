@@ -9,10 +9,12 @@ import {
 } from "reactstrap";
 import { Form, Formik } from "formik";
 import { MyTextInput } from "components/Fields/Input";
-import { ScheduleRequests } from "apis";
 import * as Yup from "yup";
+import { useDispatch } from "react-redux";
+import { addSchedule } from "redux/schedules/ScheduleSlice";
 
 const ScheduleAddModal = ({ isOpen, toggleModal }) => {
+  const dispatch = useDispatch();
   const initialValues = { name: "" };
 
   const validationSchema = Yup.object({
@@ -22,11 +24,7 @@ const ScheduleAddModal = ({ isOpen, toggleModal }) => {
   });
 
   const addASchedule = async (values) => {
-    try {
-      await ScheduleRequests.createOne(values);
-    } catch (err) {
-      console.log(err);
-    }
+    dispatch(addSchedule(values));
   };
 
   const onSubmit = async (values, { setSubmitting }) => {
@@ -84,9 +82,9 @@ const ScheduleAddModal = ({ isOpen, toggleModal }) => {
               Close
             </Button>
             <Button
-              color="primary"
+              color="info"
               type="submit"
-              className="btn-primary btn-simple"
+              className="btn-info btn-simple"
               onClick={toggleModal}
             >
               Save

@@ -14,13 +14,25 @@ export const getSchedules = createAsyncThunk(
   }
 );
 
+export const addSchedule = createAsyncThunk(
+  "schedule/addSchedule",
+  async (values, { rejectWithValue }) => {
+    try {
+      const results = await ScheduleRequests.createOne(values);
+      return { ...results.data.data.schedule, ...values };
+    } catch (err) {
+      return rejectWithValue([], err);
+    }
+  }
+);
+
 export const addTime = createAsyncThunk(
   "schedule/addTime",
   async (values, { rejectWithValue, dispatch }) => {
     try {
       const results = await TimeRequests.postOne(values.schedule_id, values);
       dispatch(setMessage("Success, added time"));
-      return results.data.data.time;
+      return { ...results.data.data.time, ...values };
     } catch (err) {
       dispatch(setMessage("Error, unable to add time"));
       return rejectWithValue([], err);
@@ -74,10 +86,14 @@ export const scheduleSlice = createSlice({
       state.daysAvailable = action.payload.days_available;
       //set the new schedules
       state.schedules = action.payload.schedules;
+      if (!action.payload.schedules) return;
       //find an active schedule
-      const activeSchedule = action.payload.schedules.find(
-        (schedule) => schedule.active === true
-      );
+      let activeSchedule = null;
+      if (action.payload?.schedules.length > 0) {
+        activeSchedule = action.payload.schedules.find(
+          (schedule) => schedule.active === true
+        );
+      }
       //add active schedule
       if (activeSchedule !== null) {
         state.active = activeSchedule;
@@ -89,6 +105,19 @@ export const scheduleSlice = createSlice({
     [getSchedules.rejected]: (state) => {
       state.status = "failed";
     },
+    [addSchedule.rejected]: (state) => {
+      state.status = "Failed";
+    },
+    [addSchedule.fulfilled]: (state, action) => {
+      state.status = "Success";
+      if (!state.active) {
+        state.active = action.payload;
+      }
+      state.schedules.push(action.payload);
+    },
+    [addSchedule.pending]: (state) => {
+      state.status = "Loading";
+    },
     [addTime.fulfilled]: (state, action) => {
       if (!action.payload) return state;
       const scheduleIndex = state.schedules.findIndex(
@@ -96,9 +125,13 @@ export const scheduleSlice = createSlice({
       );
       state.schedules[scheduleIndex].time.push(action.payload);
       //find an active schedule
-      const activeSchedule = state.schedules.find(
-        (schedule) => schedule.active === true
-      );
+      let activeSchedule = null;
+      if (state.schedules.length > 0) {
+        activeSchedule = state.schedules.find(
+          (schedule) => schedule.active === true
+        );
+      }
+
       //add active schedule
       if (activeSchedule !== null) {
         state.active = activeSchedule;

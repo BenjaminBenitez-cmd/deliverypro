@@ -45,7 +45,7 @@ const Customers = () => {
             </CardHeader>
             <CardBody>
               <Table className="tablesorter" responsive>
-                <thead className="text-primary">
+                <thead className="text-info">
                   <tr>
                     <th>Firstname</th>
                     <th>Lastname</th>

@@ -9,7 +9,7 @@ const signin = (values) => axiosInstance.post("/signin", values);
 
 const signup = (values) => axiosInstance.post("/signup", values);
 
-const signupAuth = (token) =>
+const signupAuth = (token) => {
   axiosInstance.post(
     "/authenticate",
     {},
@@ -19,11 +19,22 @@ const signupAuth = (token) =>
       },
     }
   );
+};
+
+const forgotPassword = (values) =>
+  axiosInstance.post("/forgotpassword", values);
+
+const resetpassword = (values, token) =>
+  axiosInstance.post("/resetpassword", values, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
 
 const AuthRequests = {
   signin,
   signup,
   signupAuth,
+  forgotPassword,
+  resetpassword,
 };
 
 export default AuthRequests;

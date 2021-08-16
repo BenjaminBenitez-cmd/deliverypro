@@ -65,7 +65,7 @@ const TimeCard = ({ time_start, time_end, schedule_id, id }) => {
           ) : (
             <Button
               className="btn-link"
-              color="primary"
+              color="info"
               onClick={() => dispatch(deleteTime({ schedule_id, id }))}
             >
               <i className="tim-icons icon-simple-remove"></i>

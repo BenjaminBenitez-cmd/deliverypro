@@ -45,8 +45,8 @@ const CreateSchedule = () => {
             <Container fluid className="p-0">
               <Row className="mb-3">
                 <Button
-                  color="primary"
-                  className="btn btn-primary btn-simple"
+                  color="info"
+                  className="btn btn-info btn-simple"
                   onClick={toggleModal}
                 >
                   Add
@@ -54,7 +54,7 @@ const CreateSchedule = () => {
               </Row>
               <Row>
                 <Table className="tablesorter" responsive striped>
-                  <thead className="text-primary animation-on-hover">
+                  <thead className="text-info animation-on-hover">
                     <tr>
                       <th>Name</th>
                       <th>Status</th>
@@ -71,11 +71,11 @@ const CreateSchedule = () => {
                           <td>{schedule.name}</td>
                           <td>
                             {" "}
-                            {/* <CustomInput
+                            <CustomInput
                               type="switch"
                               id="switch-1"
                               checked={schedule.active}
-                            /> */}
+                            />
                           </td>
                         </tr>
                       ))}

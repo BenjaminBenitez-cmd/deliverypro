@@ -1,9 +1,7 @@
 import { AuthRequests } from "../../apis";
 import { MyTextInput } from "components/Fields/Input";
-import { authenticate } from "redux/auth/AuthSlice";
 import { Formik, Form } from "formik";
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
 import {
   Button,
   Card,
@@ -15,35 +13,29 @@ import {
   FormGroup,
   Row,
 } from "reactstrap";
-import { setUserToLocalStorage } from "utilities/utilities";
 import * as Yup from "yup";
 
-const Signin = () => {
-  const dispatch = useDispatch();
+const ForgotPassword = () => {
   const [loading, setLoading] = useState(false);
-  const [serverError, setServerError] = useState("");
+  const [serverMessage, setServerMessage] = useState("");
 
   //initial values to pass into formik
-  const initialValues = { email: "", password: "" };
+  const initialValues = { email: "" };
 
   //validation
   const validationSchema = Yup.object({
     email: Yup.string().email("Invalid Email").required("Required"),
-    password: Yup.string()
-      .min(8, "Password is too short use a longer password")
-      .required("Required"),
   });
 
   const onSubmit = async (values, { setSubmitting }) => {
     try {
+      setServerMessage("");
       setLoading(true);
-      const response = await AuthRequests.signin(values);
-      setUserToLocalStorage(response.data.data);
-      dispatch(authenticate());
+      await AuthRequests.forgotPassword(values);
       setLoading(false);
-      // history.push("/admin/dashboard");
+      setServerMessage("An email has been sent to your inbox!");
     } catch (error) {
-      setServerError(error.response.data.message || "Something went wrong");
+      setServerMessage(error.response.data.message || "Something went wrong");
       setSubmitting(false);
       setLoading(false);
     }
@@ -60,24 +52,17 @@ const Signin = () => {
                 style={{ minWidth: "300px" }}
               >
                 <CardHeader>
-                  <CardTitle tag="h1">Sign in</CardTitle>
+                  <CardTitle tag="h1">Forgot Password</CardTitle>
                 </CardHeader>
                 <CardBody>
                   <FormGroup>
                     <MyTextInput label="Email" type="email" name="email" />
                   </FormGroup>
-                  <FormGroup>
-                    <MyTextInput
-                      label="password"
-                      type="password"
-                      name="password"
-                    />
-                  </FormGroup>
-                  {serverError && <div>{serverError}</div>}
+                  {serverMessage && <div>{serverMessage}</div>}
                 </CardBody>
                 <CardFooter>
                   <Button type="submit" color="info" className="btn-block">
-                    {loading ? "Loading..." : "Login"}
+                    {loading ? "Loading..." : "Submit"}
                   </Button>
                 </CardFooter>
               </Card>
@@ -89,4 +74,4 @@ const Signin = () => {
   );
 };
 
-export default Signin;
+export default ForgotPassword;

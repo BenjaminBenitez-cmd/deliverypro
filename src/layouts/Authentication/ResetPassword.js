@@ -1,9 +1,7 @@
 import { AuthRequests } from "../../apis";
 import { MyTextInput } from "components/Fields/Input";
-import { authenticate } from "redux/auth/AuthSlice";
 import { Formik, Form } from "formik";
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
 import {
   Button,
   Card,
@@ -15,35 +13,37 @@ import {
   FormGroup,
   Row,
 } from "reactstrap";
-import { setUserToLocalStorage } from "utilities/utilities";
 import * as Yup from "yup";
+import { useParams } from "react-router-dom";
 
-const Signin = () => {
-  const dispatch = useDispatch();
+const ResetPassword = () => {
+  const { token } = useParams();
   const [loading, setLoading] = useState(false);
-  const [serverError, setServerError] = useState("");
+  const [serverMessage, setServerMessage] = useState("");
 
   //initial values to pass into formik
-  const initialValues = { email: "", password: "" };
+  const initialValues = { password: "", repeatpassword: "" };
 
   //validation
   const validationSchema = Yup.object({
-    email: Yup.string().email("Invalid Email").required("Required"),
     password: Yup.string()
-      .min(8, "Password is too short use a longer password")
+      .min(8, "Must be 8 or more characters")
       .required("Required"),
+    repeatpassword: Yup.string().oneOf(
+      [Yup.ref("password"), null],
+      "Passwords must match"
+    ),
   });
 
   const onSubmit = async (values, { setSubmitting }) => {
     try {
+      setServerMessage("");
       setLoading(true);
-      const response = await AuthRequests.signin(values);
-      setUserToLocalStorage(response.data.data);
-      dispatch(authenticate());
+      await AuthRequests.resetpassword({ password: values.password }, token);
       setLoading(false);
-      // history.push("/admin/dashboard");
+      setServerMessage("Password has been reset");
     } catch (error) {
-      setServerError(error.response.data.message || "Something went wrong");
+      setServerMessage(error.response.data.message || "Something went wrong");
       setSubmitting(false);
       setLoading(false);
     }
@@ -60,24 +60,28 @@ const Signin = () => {
                 style={{ minWidth: "300px" }}
               >
                 <CardHeader>
-                  <CardTitle tag="h1">Sign in</CardTitle>
+                  <CardTitle tag="h1">Reset Password</CardTitle>
                 </CardHeader>
                 <CardBody>
                   <FormGroup>
-                    <MyTextInput label="Email" type="email" name="email" />
-                  </FormGroup>
-                  <FormGroup>
                     <MyTextInput
-                      label="password"
+                      label="Password"
                       type="password"
                       name="password"
                     />
                   </FormGroup>
-                  {serverError && <div>{serverError}</div>}
+                  <FormGroup>
+                    <MyTextInput
+                      label="Repeat Password"
+                      type="password"
+                      name="repeatpassword"
+                    />
+                  </FormGroup>
+                  {serverMessage && <div>{serverMessage}</div>}
                 </CardBody>
                 <CardFooter>
                   <Button type="submit" color="info" className="btn-block">
-                    {loading ? "Loading..." : "Login"}
+                    {loading ? "Loading..." : "Submit"}
                   </Button>
                 </CardFooter>
               </Card>
@@ -89,4 +93,4 @@ const Signin = () => {
   );
 };
 
-export default Signin;
+export default ResetPassword;

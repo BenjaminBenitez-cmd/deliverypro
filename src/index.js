@@ -22,6 +22,8 @@ import HiddenOnLogin from "components/EnhancedRoutes/HiddenOnLogin";
 import Verification from "layouts/Customers/Verification";
 import Signup from "layouts/Authentication/Signup";
 import SignupAuthenticate from "layouts/Authentication/SignupVerify";
+import ForgotPassword from "layouts/Authentication/ForgotPassword";
+import ResetPassword from "layouts/Authentication/ResetPassword";
 
 const user = getUserFromLocalStorage();
 
@@ -46,6 +48,14 @@ ReactDOM.render(
             <HiddenOnLogin
               path="/signin"
               render={(props) => <Signin {...props} />}
+            />
+            <HiddenOnLogin
+              path="/forgotpassword"
+              render={(props) => <ForgotPassword {...props} />}
+            />
+            <HiddenOnLogin
+              path="/resetpassword/:token"
+              render={(props) => <ResetPassword {...props} />}
             />
             <Route
               path="/verifyaddress/:token"

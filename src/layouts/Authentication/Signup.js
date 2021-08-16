@@ -16,6 +16,7 @@ import {
 import * as Yup from "yup";
 
 const Signup = () => {
+  const [loading, setLoading] = useState(false);
   const [serverError, setServerError] = useState("");
   //state for success page
   const [showSuccess, setShowSuccess] = useState(false);
@@ -49,12 +50,15 @@ const Signup = () => {
   //dispatch
   const onSubmit = async (values, { setSubmitting }) => {
     try {
+      setLoading(true);
       await AuthRequests.signup(values);
       setShowSuccess(true);
       setSubmitting(false);
+      setLoading(false);
     } catch (error) {
-      setServerError(error.response.data.message);
+      setServerError(error.response.data.message || "Something went wrong");
       setSubmitting(false);
+      setLoading(false);
     }
   };
 
@@ -108,8 +112,8 @@ const Signup = () => {
                   {serverError && <div>{serverError}</div>}
                 </CardBody>
                 <CardFooter>
-                  <Button type="submit" color="success" className="btn-block">
-                    Login
+                  <Button type="submit" color="info" className="btn-block">
+                    {loading ? "Loading..." : "Login"}
                   </Button>
                 </CardFooter>
               </Card>

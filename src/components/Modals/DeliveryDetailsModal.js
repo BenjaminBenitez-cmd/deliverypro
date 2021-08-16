@@ -76,7 +76,7 @@ const DeliveryDetailsModal = ({ isOpen, toggleModal, information }) => {
           <Button color="secondary" onClick={toggleModal}>
             Close
           </Button>
-          <Button color="primary" onClick={handleToggle}>
+          <Button color="info" onClick={handleToggle}>
             Edit
           </Button>
         </ModalFooter>

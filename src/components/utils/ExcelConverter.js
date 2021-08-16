@@ -18,7 +18,7 @@ function ExcelConverter({ csvData, fileName }) {
 
   return (
     <Button
-      color="success"
+      color="info"
       onClick={(e) => exportToCSV(csvData, fileName)}
       className="btn-link pl-0"
     >

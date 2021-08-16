@@ -128,7 +128,7 @@ const LandingScreen = ({
           </li>
         </ul>
         <Link to="/verifyaddress/details">
-          <Button type="button" color="primary">
+          <Button type="button" color="info">
             Confirm
           </Button>
         </Link>
@@ -182,16 +182,16 @@ const ReviewDetails = ({ customer_name, phone, items }) => {
           </ul>
         )}
         <Link to="/verifyaddress/address">
-          <Button type="button" className="mr-3" color="primary">
+          <Button type="button" className="mr-3" color="info">
             Yes
           </Button>
         </Link>
-        <Button type="button" color="primary" onClick={toggleCorrect}>
+        <Button type="button" color="info" onClick={toggleCorrect}>
           No
         </Button>
         <p className="mt-5">
           **** If you believe this delivery is not intended for you, report{" "}
-          <Link to="/verifyaddress/report" className="text-primary">
+          <Link to="/verifyaddress/report" className="text-info">
             here.
           </Link>
         </p>
@@ -323,7 +323,7 @@ const ConfirmLocation = ({ token }) => {
               <Button
                 type="button"
                 className="mt-4"
-                color="primary"
+                color="info"
                 onClick={handleSubmitVerification}
               >
                 Confirm
@@ -348,12 +348,12 @@ const CompletionScreen = () => {
           would like to receive email updates on each step of your package’s
           journey subscribe below.
         </p>
-        <Button type="button" className="btn btn-link pl-0" color="primary">
+        <Button type="button" className="btn btn-link pl-0" color="info">
           Send me updates
         </Button>
         <p className="mt-5">
           **** If you believe this delivery is not intended for you, report{" "}
-          <Link to="/verifyaddress/report" className="text-primary">
+          <Link to="/verifyaddress/report" className="text-info">
             here.
           </Link>
         </p>

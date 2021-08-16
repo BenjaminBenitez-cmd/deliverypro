@@ -4,8 +4,16 @@ import config from "../../config";
 import React, { useEffect, useState, useRef } from "react";
 import * as turf from "@turf/turf";
 import { Card } from "reactstrap";
+import { useCallback } from "react";
+import { useMemo } from "react";
 
-const InnerMap = ({ geoJSON, toggle, handleToggle }) => {
+const InnerMap = ({
+  warehouseGeoJSON,
+  geoJSON,
+  toggle,
+  generate,
+  setGenerate,
+}) => {
   mapboxgl.accessToken = config.MAPBOX_TOKEN;
 
   const mapContainer = useRef(null);
@@ -14,18 +22,19 @@ const InnerMap = ({ geoJSON, toggle, handleToggle }) => {
   const [lng, setLng] = useState(-88.56177);
   const [lat, setLat] = useState(18.077686);
   const [zoom, setZoom] = useState(13);
-
-  const [truckLocation, setTruckLocation] = useState([-88.6537, 18.059]);
-  const [warehouseLocation, setWarehouseLocation] = useState([
-    -88.6662, 18.0382,
-  ]);
-  //create feature array for warehouse
-  const [warehouse, setWarehouse] = useState(
-    turf.featureCollection([turf.point(warehouseLocation)])
+  //we will use the users location
+  const warehouseLocation = useMemo(
+    () => [warehouseGeoJSON.coordinates[0], warehouseGeoJSON.coordinates[1]],
+    [warehouseGeoJSON]
   );
+  //create feature array for warehouse
+
+  const warehouse = turf.featureCollection([
+    turf.pointOnFeature(warehouseGeoJSON),
+  ]);
 
   //create an empty GeoJSON feature collection for drop off
-  const [dropoffs, setDropoffs] = useState(geoJSON || null);
+  const dropoffs = geoJSON || null;
 
   //create an empty GeoJSON feature collection, which
   //will be used as the data source for the route before
@@ -57,7 +66,7 @@ const InnerMap = ({ geoJSON, toggle, handleToggle }) => {
       .addTo(map.current);
   }
 
-  function assembleQueryURL() {
+  const assembleQueryURL = useCallback(() => {
     // Set the profile to `driving`
     // Coordinates will include the current location of the truck,
 
@@ -65,15 +74,15 @@ const InnerMap = ({ geoJSON, toggle, handleToggle }) => {
       return;
     }
 
-    let coordinates = [truckLocation];
+    let coordinates = [warehouseLocation];
 
     dropoffs.features.forEach((dropoff) => {
-      if (!dropoff.properties.verified) return;
+      // if (!dropoff.properties.verified) return;
       coordinates.push(dropoff.geometry.coordinates);
     });
 
     //avoid api call if no coordinates
-    if (coordinates.length >= 1) return;
+    if (coordinates.length <= 1) return;
 
     return (
       "https://api.mapbox.com/optimized-trips/v1/mapbox/driving/" +
@@ -81,28 +90,31 @@ const InnerMap = ({ geoJSON, toggle, handleToggle }) => {
       "?overview=full&steps=true&geometries=geojson&source=first&access_token=" +
       mapboxgl.accessToken
     );
-  }
+  }, [dropoffs.features, dropoffs.length, warehouseLocation]);
 
   //listen for a click on the map
-  async function getOptimizedRoutes(geoJSON) {
-    const optimisedResponse = await fetch(assembleQueryURL(geoJSON));
-    const data = await optimisedResponse.json();
-    let routeGeoJSON = turf.featureCollection([
-      turf.feature(data.trips[0].geometry),
-    ]);
+  const getOptimizedRoutes = useCallback(
+    async (geoJSON) => {
+      const optimisedResponse = await fetch(assembleQueryURL(geoJSON));
+      const data = await optimisedResponse.json();
+      let routeGeoJSON = turf.featureCollection([
+        turf.feature(data.trips[0].geometry),
+      ]);
 
-    if (!data.trips[0]) {
-      routeGeoJSON = nothing;
-    } else {
-      //update the `route` source by getting the route source
-      //and setting the data eequal to routeGeoJSON
-      map.current.getSource("route").setData(routeGeoJSON);
-    }
+      if (!data.trips[0]) {
+        routeGeoJSON = nothing;
+      } else {
+        //update the `route` source by getting the route source
+        //and setting the data eequal to routeGeoJSON
+        map.current.getSource("route").setData(routeGeoJSON);
+      }
 
-    if (data.waypoints.length === 12) {
-      window.alert("Maximum number of points reached.");
-    }
-  }
+      if (data.waypoints.length === 12) {
+        window.alert("Maximum number of points reached.");
+      }
+    },
+    [assembleQueryURL, nothing]
+  );
 
   useEffect(() => {
     if (!toggle) return;
@@ -120,7 +132,7 @@ const InnerMap = ({ geoJSON, toggle, handleToggle }) => {
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
       style: "mapbox://styles/benjaminbenitez/ckoz72adp0il517o69jxikbt7",
-      center: truckLocation,
+      center: warehouseLocation,
       zoom: zoom,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -132,11 +144,6 @@ const InnerMap = ({ geoJSON, toggle, handleToggle }) => {
     map.current.on("load", () => {
       let marker = document.createElement("div");
       marker.classList = "truck";
-
-      //create a new marker
-      let truckMarker = new mapboxgl.Marker(marker)
-        .setLngLat(truckLocation)
-        .addTo(map.current);
 
       // Create a circle layer
       !map.current.getLayer("warehouse") &&
@@ -188,10 +195,11 @@ const InnerMap = ({ geoJSON, toggle, handleToggle }) => {
           },
         });
 
-      map.current.addSource("route", {
-        type: "geojson",
-        data: nothing,
-      });
+      !map.current.getSource("route") &&
+        map.current.addSource("route", {
+          type: "geojson",
+          data: nothing,
+        });
 
       !map.current.getLayer("routeline-active") &&
         map.current.addLayer(
@@ -257,9 +265,28 @@ const InnerMap = ({ geoJSON, toggle, handleToggle }) => {
           "waterway-label"
         );
 
-      getOptimizedRoutes(geoJSON);
+      !map.current.getLayer("locations") &&
+        map.current.addLayer({
+          id: "locations",
+          type: "circle",
+          /* Add a GeoJSON source containing place coordinates and information. */
+          source: {
+            type: "geojson",
+            data: geoJSON,
+          },
+          paint: {
+            "circle-radius": {
+              base: 1.75,
+              stops: [
+                [12, 2],
+                [22, 180],
+              ],
+            },
+            "circle-color": "#00f2c3",
+          },
+        });
     });
-  }, [geoJSON, dropoffs]);
+  }, [geoJSON, dropoffs, nothing, warehouse]);
 
   useEffect(() => {
     if (!map.current) return;
@@ -270,6 +297,14 @@ const InnerMap = ({ geoJSON, toggle, handleToggle }) => {
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (!generate) return;
+    if (!map.current) return;
+    if (!geoJSON) return;
+    getOptimizedRoutes(geoJSON);
+    setGenerate(false);
+  }, [generate, geoJSON, setGenerate, getOptimizedRoutes]);
 
   return (
     <Card>

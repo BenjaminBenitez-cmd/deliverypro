@@ -44,7 +44,7 @@ export default function Drivers() {
 
   const InnerTable = () => (
     <Table className="tablesorter" responsive>
-      <thead className="text-primary">
+      <thead className="text-info">
         <tr>
           <th>Name</th>
           <th>Phone Number</th>
@@ -121,7 +121,7 @@ export default function Drivers() {
                     </Row>
                   </CardBody>
                   <CardFooter>
-                    <Button color="success" type="submit">
+                    <Button color="info" type="submit">
                       Invite
                     </Button>
                   </CardFooter>

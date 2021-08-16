@@ -22,15 +22,37 @@ import { chartExample1 } from "variables/charts.js";
 import { useDispatch, useSelector } from "react-redux";
 import { getSchedules } from "redux/schedules/ScheduleSlice";
 import { getDeliveries } from "redux/deliveries/DeliverySlice";
+import { useState } from "react";
+import DeliveryOnboardModal from "components/Modals/DeliveryOnboardModal";
+import { CompanyRequests } from "apis";
 
 function Dashboard(props) {
   const dispatch = useDispatch();
   const deliveries = useSelector((state) => state.deliveries.deliveries);
+  const [isOpen, setIsOpen] = useState(false);
 
   const [bigChartData, setbigChartData] = React.useState("data1");
   const setBgChartData = (name) => {
     setbigChartData(name);
   };
+
+  //check if the company has a location
+  useEffect(() => {
+    const fetchCompanyAddress = async () => {
+      try {
+        const response = await CompanyRequests.getOne();
+        if (
+          !response.data.data.company.geolocation ||
+          response.data.data.company.geolocation.coordinates.length <= 0
+        ) {
+          setIsOpen(true);
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchCompanyAddress();
+  }, []);
 
   useEffect(() => {
     dispatch(getSchedules());
@@ -42,7 +64,7 @@ function Dashboard(props) {
       <div className="content">
         <Row>
           <Col xs="12">
-            <Card className="card-chart card-plain" plain>
+            <Card className="card-chart card-plain">
               <CardHeader>
                 <Row>
                   <Col className="text-left" sm="6">
@@ -120,63 +142,6 @@ function Dashboard(props) {
             </Card>
           </Col>
         </Row>
-        {/* <Row>
-          <Col lg="4">
-            <Card className="card-chart">
-              <CardHeader>
-                <h5 className="card-category">Total Deliveries</h5>
-                <CardTitle tag="h3">
-                  <i className="tim-icons icon-bell-55 text-info" /> 763,215
-                </CardTitle>
-              </CardHeader>
-              <CardBody>
-                <div className="chart-area">
-                  <Line
-                    data={chartExample2.data}
-                    options={chartExample2.options}
-                  />
-                </div>
-              </CardBody>
-            </Card>
-          </Col>
-          <Col lg="4">
-            <Card className="card-chart">
-              <CardHeader>
-                <h5 className="card-category">Disctrict Deliveries</h5>
-                <CardTitle tag="h3">
-                  <i className="tim-icons icon-delivery-fast text-primary" />{" "}
-                  500
-                </CardTitle>
-              </CardHeader>
-              <CardBody>
-                <div className="chart-area">
-                  <Bar
-                    data={chartExample3.data}
-                    options={chartExample3.options}
-                  />
-                </div>
-              </CardBody>
-            </Card>
-          </Col>
-          <Col lg="4">
-            <Card className="card-chart">
-              <CardHeader>
-                <h5 className="card-category">Fullfilled Deliveries</h5>
-                <CardTitle tag="h3">
-                  <i className="tim-icons icon-send text-success" /> 12,100K
-                </CardTitle>
-              </CardHeader>
-              <CardBody>
-                <div className="chart-area">
-                  <Line
-                    data={chartExample4.data}
-                    options={chartExample4.options}
-                  />
-                </div>
-              </CardBody>
-            </Card>
-          </Col>
-        </Row> */}
         <Row>
           <Col lg="6" md="12">
             <Card className="card-plain">
@@ -185,7 +150,7 @@ function Dashboard(props) {
               </CardHeader>
               <CardBody>
                 <Table className="tablesorter" responsive>
-                  <thead className="text-primary">
+                  <thead className="text-info">
                     <tr>
                       <th>Name</th>
                       <th>Phone Number</th>
@@ -217,6 +182,12 @@ function Dashboard(props) {
             </Card>
           </Col>
         </Row>
+        {isOpen && (
+          <DeliveryOnboardModal
+            isOpen={isOpen}
+            toggleModal={() => setIsOpen((prev) => (prev = !prev))}
+          />
+        )}
       </div>
     </>
   );

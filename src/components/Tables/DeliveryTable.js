@@ -6,7 +6,6 @@ import {
   CardTitle,
   Table,
   FormGroup,
-  Input,
   Label,
   Button,
   Col,
@@ -14,7 +13,6 @@ import {
 } from "reactstrap";
 import { statustoText } from "../../utilities/utilities";
 import { useDispatch, useSelector } from "react-redux";
-import { toggleDelivery } from "redux/deliveries/DeliverySlice";
 import DeliveryDetailsModal from "components/Modals/DeliveryDetailsModal";
 import LoadingSpinner from "components/loading/LoadingSpinner";
 import useFilterDays from "../../hooks/useFilterDays";
@@ -160,7 +158,7 @@ const DeliveryTable = ({ deliveries, status }) => {
         </CardHeader>
         <CardBody>
           <Table className="tablesorter" responsive striped>
-            <thead className="text-primary">
+            <thead className="text-info">
               <tr>
                 <th>Fullfilled</th>
                 <th>Delivery Status</th>
