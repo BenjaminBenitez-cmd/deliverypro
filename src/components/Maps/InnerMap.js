@@ -275,14 +275,10 @@ const InnerMap = ({
             data: geoJSON,
           },
           paint: {
-            "circle-radius": {
-              base: 1.75,
-              stops: [
-                [12, 2],
-                [22, 180],
-              ],
-            },
-            "circle-color": "#00f2c3",
+            "circle-color": "#4264fb",
+            "circle-radius": 6,
+            "circle-stroke-width": 2,
+            "circle-stroke-color": "#ffffff",
           },
         });
     });

@@ -10,6 +10,7 @@ import {
   Button,
   Col,
   Row,
+  Input,
 } from "reactstrap";
 import { statustoText } from "../../utilities/utilities";
 import { useDispatch, useSelector } from "react-redux";
@@ -19,6 +20,7 @@ import useFilterDays from "../../hooks/useFilterDays";
 import ExcelConverter from "components/utils/ExcelConverter";
 import { deleteDelivery } from "redux/deliveries/DeliverySlice";
 import DeliveryEditModal from "components/Modals/DeliveryEditModal";
+import { toggleDelivery } from "redux/deliveries/DeliverySlice";
 
 const DeliveryTable = ({ deliveries, status }) => {
   const dispatch = useDispatch();
@@ -101,12 +103,12 @@ const DeliveryTable = ({ deliveries, status }) => {
       <td>
         <FormGroup check>
           <Label check>
-            {/* <Input
+            <Input
               onChange={() => dispatch(toggleDelivery(id))}
               checked={delivery_status}
               type="checkbox"
               className="bg-success"
-            /> */}
+            />
             <span className="form-check-sign" />
           </Label>
         </FormGroup>

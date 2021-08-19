@@ -64,12 +64,15 @@ const DeliveryEditModal = ({ isOpen, toggleModal, information }) => {
       .required("Required"),
     email: Yup.string().email("Invalid Email").required("Required"),
     phone_number: Yup.string().matches(phoneRegExp, "Invalid Phone Number"),
-    description: Yup.string().max(120, "Must be less than 120 characters"),
+    description: Yup.string()
+      .max(120, "Must be less than 120 characters")
+      .nullable(true),
     delivery_day: Yup.number().required("Required"),
     delivery_time: Yup.number().required("Required"),
   });
 
   const onSubmit = async (values, { setSubmitting }) => {
+    debugger;
     const combinedValues = { ...values, ...location };
     dispatch(updateDelivery({ id: information.id, body: combinedValues }));
     setSubmitting(false);
@@ -147,7 +150,7 @@ const DeliveryEditModal = ({ isOpen, toggleModal, information }) => {
                           />
                         </FormGroup>
                       </Col>
-                      <Col className="pr-md-3" md="12">
+                      <Col className="pr-md-1" md="12">
                         <FormGroup>
                           <MyTextInput
                             label="Description"
