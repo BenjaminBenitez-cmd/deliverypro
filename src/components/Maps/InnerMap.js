@@ -13,6 +13,7 @@ const InnerMap = ({
   toggle,
   generate,
   setGenerate,
+  children,
 }) => {
   mapboxgl.accessToken = config.MAPBOX_TOKEN;
 
@@ -303,13 +304,14 @@ const InnerMap = ({
   }, [generate, geoJSON, setGenerate, getOptimizedRoutes]);
 
   return (
-    <Card>
+    <Card className="card-plain">
       <div>
         <div className="sidebarStyle">
           Longitude: {lng} | Latitude: {lat} | Zoom: {zoom}
         </div>
       </div>
-      <div ref={mapContainer} className="mapContainer tall" />
+      <div ref={mapContainer} className="mapContainer extra-tall" />
+      {children}
     </Card>
   );
 };

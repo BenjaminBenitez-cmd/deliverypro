@@ -150,6 +150,10 @@
   height: 60vh;
 }
 
+.extra-tall {
+  height: 80vh;
+}
+
 .sidebarStyle {
   display: inline-block;
   position: absolute;

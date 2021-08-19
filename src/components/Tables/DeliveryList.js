@@ -11,7 +11,10 @@ const MapDeliveryList = ({
   generate,
 }) => {
   return (
-    <Card className="card-plain">
+    <Card
+      className="card-plain position-absolute left-0"
+      style={{ width: "200px", top: "90px" }}
+    >
       <CardBody>
         <Table className="table-sorter" striped>
           <tbody>

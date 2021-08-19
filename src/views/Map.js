@@ -55,7 +55,7 @@ function Map() {
               <CardBody>
                 {geoJSON && warehouseGeoJSON && (
                   <Row>
-                    <Col sm={3} className="pl-0">
+                    {/* <Col sm={3} className="pl-0">
                       <MapDeliveryList
                         deliveries={geoJSON.features}
                         handleToggle={handleToggle}
@@ -63,8 +63,8 @@ function Map() {
                         setGenerate={setGenerate}
                         generate={generate}
                       />
-                    </Col>
-                    <Col sm={9}>
+                    </Col> */}
+                    <Col sm={12}>
                       <InnerMap
                         warehouseGeoJSON={warehouseGeoJSON}
                         geoJSON={geoJSON}
@@ -72,7 +72,15 @@ function Map() {
                         handleToggle={handleToggle}
                         setGenerate={setGenerate}
                         generate={generate}
-                      />
+                      >
+                        <MapDeliveryList
+                          deliveries={geoJSON.features}
+                          handleToggle={handleToggle}
+                          activeID={toggle}
+                          setGenerate={setGenerate}
+                          generate={generate}
+                        />
+                      </InnerMap>
                     </Col>
                   </Row>
                 )}
