@@ -43,7 +43,7 @@ const Signin = () => {
       setLoading(false);
       // history.push("/admin/dashboard");
     } catch (error) {
-      setServerError(error.response.data.message || "Something went wrong");
+      setServerError(error.response?.data.message || "Something went wrong");
       setSubmitting(false);
       setLoading(false);
     }

@@ -5,6 +5,7 @@ import {
   Link,
   Route,
   Switch,
+  useHistory,
   useParams,
 } from "react-router-dom";
 import { Col, Container, Row, Button, Input, Card, CardBody } from "reactstrap";
@@ -13,8 +14,6 @@ import mapboxgl from "!mapbox-gl";
 import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import "@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css";
 import config from "../../config";
-
-mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_API;
 
 const Verification = ({ match: { url } }) => {
   const { token } = useParams();
@@ -79,6 +78,11 @@ const Verification = ({ match: { url } }) => {
                 exact={true}
                 path={`/verifyaddress/completion`}
                 render={() => <CompletionScreen />}
+              />
+              <Route
+                exact={true}
+                path={`/verifyaddress/error`}
+                render={() => <ErrorScreen />}
               />
               <Route
                 exact={true}
@@ -202,14 +206,19 @@ const ReviewDetails = ({ customer_name, phone, items }) => {
 };
 
 const ConfirmLocation = ({ token }) => {
+  mapboxgl.accessToken = config.MAPBOX_TOKEN;
   const map = useRef(null);
   const mapContainer = useRef(null);
   const [longitude, setLongitude] = useState(null);
   const [latitude, setLatitude] = useState(null);
-  const zoom = 18;
+  const [loading, setLoading] = useState(false);
+
+  const zoom = 13;
+  const history = useHistory();
 
   const handleSubmitVerification = async () => {
     if (!longitude || !latitude) return;
+    setLoading(true);
     try {
       await axios.post(
         config.URL + "/verifydelivery",
@@ -223,7 +232,11 @@ const ConfirmLocation = ({ token }) => {
           },
         }
       );
+      setLoading(false);
+      history.push("/verifyaddress/completion");
     } catch (err) {
+      setLoading(false);
+      history.push("/verifyaddress/error");
       console.error(err);
     }
   };
@@ -319,16 +332,14 @@ const ConfirmLocation = ({ token }) => {
               We collect your GPS location to ensure the precise delivery of
               your package
             </p>
-            <Link to="/verifyaddress/completion">
-              <Button
-                type="button"
-                className="mt-4"
-                color="info"
-                onClick={handleSubmitVerification}
-              >
-                Confirm
-              </Button>
-            </Link>
+            <Button
+              type="button"
+              className="mt-4"
+              color="info"
+              onClick={handleSubmitVerification}
+            >
+              {loading ? "Confirming..." : "Confirm"}
+            </Button>
           </CardBody>
         </Card>
       </div>
@@ -347,6 +358,32 @@ const CompletionScreen = () => {
           An email with more details has been sent to your email account. If you
           would like to receive email updates on each step of your package’s
           journey subscribe below.
+        </p>
+        <Button type="button" className="btn btn-link pl-0" color="info">
+          Send me updates
+        </Button>
+        <p className="mt-5">
+          **** If you believe this delivery is not intended for you, report{" "}
+          <Link to="/verifyaddress/report" className="text-info">
+            here.
+          </Link>
+        </p>
+      </Col>
+      <Col sm={6}></Col>
+    </Row>
+  );
+};
+
+const ErrorScreen = () => {
+  return (
+    <Row className="h-100 align-items-center">
+      <Col sm={6}>
+        <h1 className="display-3">
+          We are Sorry, this error has been reported.
+        </h1>
+        <p>
+          We will investigate into this error and get back to you promtly. In
+          the meanwhile contact us at support@deliverypro.com.
         </p>
         <Button type="button" className="btn btn-link pl-0" color="info">
           Send me updates
