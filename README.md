@@ -1,2 +1,2 @@
 # Last mile deliveries with delivery pro
-Last mile deliveries can often be very inefficient this is why I decided to create delivery pro. This version uses Mapbox and the optimization api to generate optimised routes. 
+Having a first hand experience of the inefficiency of lastmile deliveries allowed me appreciate why last-mile delivery software is very important. This version uses Mapbox and the optimization api to generate optimised routes. 
